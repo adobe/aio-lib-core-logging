@@ -17,6 +17,8 @@ afterEach(() => {
 })
 
 test('Debug', () => {
+  process.env.DEBUG = '*'
+
   global.console = { log: jest.fn() }
   const aioLogger = AioLogger('App', { provider: './DebugLogger' })
   aioLogger.error('message')
@@ -27,6 +29,8 @@ test('Debug', () => {
   aioLogger.silly('message')
   aioLogger.close()
   expect(global.console.log).toHaveBeenCalledTimes(6)
+
+  delete process.env.DEBUG
 })
 
 test('Winston', async () => {
