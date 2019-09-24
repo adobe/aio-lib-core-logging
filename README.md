@@ -1,51 +1,68 @@
 # aio-lib-core-logging
 
-[Docs](./doc/api.md)
+## Install
 
-## Usage
+`npm install @adobe/aio-lib-core-logging`
+
+## Use
+
 ```javascript
-let aioLogger = require('aio-lib-core-logging')('App')
+let aioLogger = require('@adobe/aio-lib-core-logging')('App')
 aioLogger.info('Hello logs')
 ```
 
-## Output
+### Output
+
 Above code will log the following
 > [App /mynamespace/myaction] info: Hello logs
 
 Where _App_ would be the name of the application/module that is sending the logs.
 
-## Configuration
+### Configuration
+
 The logger can be customized by passing a config object at the time of creation.
+
 ```javascript
-let aioLogger = require('aio-lib-core-logging')('App', config)
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', config)
 ```
+
 The config object can have one or more of the following keys.
+
 - provider (logging provider. default is winston.)
 - logSourceAction (boolean to control whether to include the action name in the log message)
 - transports (array of custom winston transports)
 
-## Using Custom Logger
+### Custom Logger
+
 ```javascript
 // Winston Logger
-let aioLogger = require('aio-lib-core-logging')('App', {provider:'./WinstonLogger'})
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'./WinstonLogger'})
 aioLogger.info('Hello logs')
 ```
+
 or
+
 ```javascript
 // Debug Logger
-let aioLogger = require('aio-lib-core-logging')('App', {provider:'./DebugLogger'})
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'./DebugLogger'})
 ```
 
-## Sending logs to a file
+### Send logs to a file
+
 ```javascript
-let aioLogger = require('aio-lib-core-logging')('App', {transports: './logfile.txt' })
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', {transports: './logfile.txt' })
 ```
 
-## Using custom winston transports
+### Custom winston transports
+
 ```javascript
 const winston = require('winston')
-let aioLogger = require('aio-lib-core-logging')('App', {transports: [new winston.transports.File({ filename: './winstoncustomfilelog.txt' })]})
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', {transports: [new winston.transports.File({ filename: './winstoncustomfilelog.txt' })]})
 ```
+
+## Explore
+
+`goto` [API](./doc/api.md)
 
 ## Contributing
 
