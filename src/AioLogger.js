@@ -29,7 +29,6 @@ const DEFAULT_LABEL = 'AIO'
  * to disable
  */
 
-
 /**
 * This class provides a logging framework with pluggable logging provider.
 * Winston is used by default.
