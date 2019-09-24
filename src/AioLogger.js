@@ -15,10 +15,14 @@ const DEFAULT_LEVEL = 'info'
 const DEFAULT_LABEL = 'AIO'
 
 /**
+ * @module @adobe/aio-lib-core-logging
+ */
+
+/**
 * This class provides a logging framework with pluggable logging provider.
 * Winston is used by default.
 */
-class AIOLogger {
+class AioLogger {
   /** Constructor
   *
   * @param moduleName {string} module name to be included with the log message.
@@ -100,4 +104,14 @@ class AIOLogger {
     this.logger.silly(message)
   }
 }
-module.exports = function (moduleName, config) { return new AIOLogger(moduleName, config) }
+
+/**
+  * Creates a new AioLogger instance.
+  *
+  * @param moduleName {string} module name to be included with the log message.
+  * @param config {string} configuration for the log framework.
+  * @function
+ */
+module.exports = function (moduleName, config) {
+  return new AioLogger(moduleName, config)
+}
