@@ -5,7 +5,7 @@
 * [@adobe/aio-lib-core-logging](#module_@adobe/aio-lib-core-logging)
     * [module.exports(moduleName, config)](#exp_module_@adobe/aio-lib-core-logging--module.exports) ⏏
         * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
-            * [new AioLogger(moduleName, config)](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
+            * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
             * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
             * [.error(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
             * [.warn(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
@@ -13,6 +13,7 @@
             * [.verbose(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
             * [.debug(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
             * [.silly(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
+        * [~AioLoggerConfig](#module_@adobe/aio-lib-core-logging--module.exports..AioLoggerConfig) : <code>object</code>
 
 <a name="exp_module_@adobe/aio-lib-core-logging--module.exports"></a>
 
@@ -24,7 +25,7 @@ Creates a new AioLogger instance.
 | Param | Type | Description |
 | --- | --- | --- |
 | moduleName | <code>string</code> | module name to be included with the log message. |
-| config | <code>string</code> | configuration for the log framework. |
+| config | <code>AioLoggerConfig</code> | configuration for the log framework. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger"></a>
 
@@ -35,7 +36,7 @@ Winston is used by default.
 **Kind**: inner class of [<code>module.exports</code>](#exp_module_@adobe/aio-lib-core-logging--module.exports)  
 
 * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
-    * [new AioLogger(moduleName, config)](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
+    * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
     * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
     * [.error(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
     * [.warn(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
@@ -46,14 +47,14 @@ Winston is used by default.
 
 <a name="new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new"></a>
 
-##### new AioLogger(moduleName, config)
+##### new AioLogger(moduleName, [config])
 Constructor
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| moduleName | <code>string</code> | module name to be included with the log message. |
-| config | <code>string</code> | configuration for the log framework. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| moduleName | <code>string</code> |  | module name to be included with the log message. |
+| [config] | <code>AioLoggerConfig</code> | <code>{}</code> | for the log framework. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close"></a>
 
@@ -126,4 +127,18 @@ log silly message.
 | Param | Type | Description |
 | --- | --- | --- |
 | message | <code>string</code> | message to be logged. |
+
+<a name="module_@adobe/aio-lib-core-logging--module.exports..AioLoggerConfig"></a>
+
+#### module.exports~AioLoggerConfig : <code>object</code>
+configuration for the log framework
+
+**Kind**: inner typedef of [<code>module.exports</code>](#exp_module_@adobe/aio-lib-core-logging--module.exports)  
+**Properties**
+
+| Name | Type | Description |
+| --- | --- | --- |
+| [level] | <code>string</code> | logging level for winston, defaults to info |
+| [provider] | <code>string</code> | defaults to winston, can be set to either './WinstonLogger' or './DebugLogger' |
+| [logSourceAction] | <code>boolean</code> | default to true, if running in an action will log the action name, set to false to disable |
 

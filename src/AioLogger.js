@@ -19,14 +19,26 @@ const DEFAULT_LABEL = 'AIO'
  */
 
 /**
+ * configuration for the log framework
+ *
+ * @typedef AioLoggerConfig
+ * @type {object}
+ * @property {string} [level] logging level for winston, defaults to info
+ * @property {string} [provider] defaults to winston, can be set to either './WinstonLogger' or './DebugLogger'
+ * @property {boolean} [logSourceAction] default to true, if running in an action will log the action name, set to false
+ * to disable
+ */
+
+
+/**
 * This class provides a logging framework with pluggable logging provider.
 * Winston is used by default.
 */
 class AioLogger {
   /** Constructor
   *
-  * @param moduleName {string} module name to be included with the log message.
-  * @param config {string} configuration for the log framework.
+  * @param {string} moduleName  module name to be included with the log message.
+  * @param {AioLoggerConfig} [config={}] for the log framework.
   */
   constructor (moduleName, config = {}) {
     config = this.setDefaults(moduleName, config)
@@ -37,7 +49,7 @@ class AioLogger {
   setDefaults (moduleName, config) {
     config.level = config.level || DEFAULT_LEVEL
     config.provider = config.provider || DEFAULT_PROVIDER
-    config.logSourceAction = config.logSourceAction === undefined ? true : config.logSourceAction
+    config.logSourceAction = !!process.env.__OW_ACTION_NAME && config.logSourceAction !== false
     config.label = this.generateLabel(moduleName, config)
     return config
   }
@@ -109,7 +121,7 @@ class AioLogger {
   * Creates a new AioLogger instance.
   *
   * @param moduleName {string} module name to be included with the log message.
-  * @param config {string} configuration for the log framework.
+  * @param config {AioLoggerConfig} configuration for the log framework.
   * @function
  */
 module.exports = function (moduleName, config) {

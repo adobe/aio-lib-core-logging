@@ -8,6 +8,10 @@
     "lint": "eslint .",
     "docs": "jsdoc2md -f 'src/*.js' > doc/api.md"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adobe/aio-lib-core-logging.git"
+  },
   "author": "",
   "license": "Apache-2.0",
   "dependencies": {
