@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const AIOLogger = require('../src/AIOLogger')
+const AioLogger = require('../src/AioLogger')
 const fs = require('fs-extra')
 
 afterEach(() => {
@@ -18,7 +18,7 @@ afterEach(() => {
 
 test('Debug', () => {
   global.console = { log: jest.fn() }
-  const aioLogger = AIOLogger('App', { provider: './DebugLogger' })
+  const aioLogger = AioLogger('App', { provider: './DebugLogger' })
   aioLogger.error('message')
   aioLogger.warn('message')
   aioLogger.info('message')
@@ -32,7 +32,7 @@ test('Debug', () => {
 test('Winston', async () => {
   fs.removeSync('./logfile.txt')
   fs.closeSync(fs.openSync('./logfile.txt', 'w'))
-  let aioLogger = AIOLogger()
+  let aioLogger = AioLogger()
   aioLogger.error('message')
   aioLogger.warn('message')
   aioLogger.info('message')
@@ -43,7 +43,7 @@ test('Winston', async () => {
   expect(global.console.log).toHaveBeenCalledTimes(3)
   expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining('[AIO undefined] info: message'))
 
-  aioLogger = AIOLogger('App', { transports: './logfile.txt', logSourceAction: false })
+  aioLogger = AioLogger('App', { transports: './logfile.txt', logSourceAction: false })
   aioLogger.error('logfile')
   aioLogger.close()
   function getLog () {
@@ -58,7 +58,7 @@ test('Winston', async () => {
   expect(await getLog()).toContain('[App] error: logfile')
 
   const winston = require('winston')
-  aioLogger = AIOLogger('App', { transports: [new winston.transports.File({ filename: './logfile.txt' })], logSourceAction: false })
+  aioLogger = AioLogger('App', { transports: [new winston.transports.File({ filename: './logfile.txt' })], logSourceAction: false })
   aioLogger.error('logfile')
   aioLogger.close()
   expect(await getLog()).toContain('[App] error: logfile')

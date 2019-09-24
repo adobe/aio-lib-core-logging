@@ -1,5 +1,7 @@
 # aio-lib-core-logging
 
+[Docs](./doc/api.md)
+
 ## Usage
 ```javascript
 let aioLogger = require('aio-lib-core-logging')('App')

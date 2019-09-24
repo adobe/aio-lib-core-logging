@@ -1,11 +1,12 @@
 {
   "name": "@adobe/aio-lib-core-logging",
   "version": "0.0.2",
-  "description": "AIO SDK Logging",
-  "main": "src/AIOLogger.js",
+  "description": "Logger framework for the Adobe I/O SDK",
+  "main": "src/AioLogger.js",
   "scripts": {
     "test": "npm run lint && DEBUG=* jest --coverage",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "docs": "jsdoc2md -f 'src/*.js' > doc/api.md"
   },
   "author": "",
   "license": "Apache-2.0",
@@ -23,6 +24,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "fs-extra": "^8.1.0",
-    "jest": "^24.9.0"
+    "jest": "^24.9.0",
+    "jsdoc-to-markdown": "^5.0.1"
   }
 }
