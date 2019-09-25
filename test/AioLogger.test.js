@@ -14,6 +14,40 @@ const fs = require('fs-extra')
 
 afterEach(() => {
   jest.clearAllMocks()
+  delete process.env.__OW_ACTION_NAME
+  delete process.env.DEBUG
+})
+
+describe('config', () => {
+  test('when using defaults', () => {
+    const aioLogger = AioLogger('App')
+
+    expect(aioLogger.config.provider).toEqual('./WinstonLogger')
+    expect(aioLogger.config.level).toEqual('info')
+    expect(aioLogger.config.logSourceAction).toEqual(false)
+    expect(aioLogger.config.transports).toEqual(undefined)
+    expect(aioLogger.config.silent).toEqual(false)
+  })
+  test('when using defaults and __OW_ACTION_NAME is set', () => {
+    process.env.__OW_ACTION_NAME = 'fake-action'
+    const aioLogger = AioLogger('App')
+
+    expect(aioLogger.config.provider).toEqual('./WinstonLogger')
+    expect(aioLogger.config.level).toEqual('info')
+    expect(aioLogger.config.logSourceAction).toEqual(true)
+    expect(aioLogger.config.transports).toEqual(undefined)
+    expect(aioLogger.config.silent).toEqual(false)
+  })
+  test('when __OW_ACTION_NAME is set and config.logSourceAction = false', () => {
+    process.env.__OW_ACTION_NAME = 'fake-action'
+    const aioLogger = AioLogger('App', { logSourceAction: false })
+
+    expect(aioLogger.config.provider).toEqual('./WinstonLogger')
+    expect(aioLogger.config.level).toEqual('info')
+    expect(aioLogger.config.logSourceAction).toEqual(false)
+    expect(aioLogger.config.transports).toEqual(undefined)
+    expect(aioLogger.config.silent).toEqual(false)
+  })
 })
 
 test('Debug', () => {
@@ -29,8 +63,6 @@ test('Debug', () => {
   aioLogger.silly('message')
   aioLogger.close()
   expect(global.console.log).toHaveBeenCalledTimes(6)
-
-  delete process.env.DEBUG
 })
 
 test('Winston', async () => {

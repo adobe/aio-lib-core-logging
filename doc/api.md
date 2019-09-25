@@ -3,7 +3,7 @@
 ## @adobe/aio-lib-core-logging
 
 * [@adobe/aio-lib-core-logging](#module_@adobe/aio-lib-core-logging)
-    * [module.exports(moduleName, config)](#exp_module_@adobe/aio-lib-core-logging--module.exports) ⏏
+    * [module.exports(moduleName, [config&#x3D;])](#exp_module_@adobe/aio-lib-core-logging--module.exports) ⏏
         * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
             * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
             * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
@@ -17,7 +17,7 @@
 
 <a name="exp_module_@adobe/aio-lib-core-logging--module.exports"></a>
 
-### module.exports(moduleName, config) ⏏
+### module.exports(moduleName, [config&#x3D;]) ⏏
 Creates a new AioLogger instance.
 
 **Kind**: Exported function  
@@ -25,7 +25,7 @@ Creates a new AioLogger instance.
 | Param | Type | Description |
 | --- | --- | --- |
 | moduleName | <code>string</code> | module name to be included with the log message. |
-| config | <code>AioLoggerConfig</code> | configuration for the log framework. |
+| [config=] |  | {AioLoggerConfig} configuration for the log framework. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger"></a>
 
@@ -139,6 +139,8 @@ configuration for the log framework
 | Name | Type | Description |
 | --- | --- | --- |
 | [level] | <code>string</code> | logging level for winston, defaults to info |
+| [transports] | <code>string</code> | transport config for winston, defaults to undefined |
+| [silent] | <code>boolean</code> | silent config for winston, defaults to false |
 | [provider] | <code>string</code> | defaults to winston, can be set to either './WinstonLogger' or './DebugLogger' |
-| [logSourceAction] | <code>boolean</code> | default to true, if running in an action will log the action name, set to false to disable |
+| [logSourceAction] | <code>boolean</code> | defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If running in an action set logSourceAction to false if you do not want to log the action name. |
 

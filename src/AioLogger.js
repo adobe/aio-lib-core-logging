@@ -24,9 +24,11 @@ const DEFAULT_LABEL = 'AIO'
  * @typedef AioLoggerConfig
  * @type {object}
  * @property {string} [level] logging level for winston, defaults to info
+ * @property {string} [transports] transport config for winston, defaults to undefined
+ * @property {boolean} [silent] silent config for winston, defaults to false
  * @property {string} [provider] defaults to winston, can be set to either './WinstonLogger' or './DebugLogger'
- * @property {boolean} [logSourceAction] default to true, if running in an action will log the action name, set to false
- * to disable
+ * @property {boolean} [logSourceAction] defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If
+ * running in an action set logSourceAction to false if you do not want to log the action name.
  */
 
 /**
@@ -40,17 +42,21 @@ class AioLogger {
   * @param {AioLoggerConfig} [config={}] for the log framework.
   */
   constructor (moduleName, config = {}) {
-    config = this.setDefaults(moduleName, config)
-    this.LogProvider = require(config.provider)
-    this.logger = new this.LogProvider(config)
+    this.setDefaults(moduleName, config)
+    this.LogProvider = require(this.config.provider)
+    this.logger = new this.LogProvider(this.config)
   }
 
   setDefaults (moduleName, config) {
-    config.level = config.level || DEFAULT_LEVEL
-    config.provider = config.provider || DEFAULT_PROVIDER
-    config.logSourceAction = !!process.env.__OW_ACTION_NAME && config.logSourceAction !== false
-    config.label = this.generateLabel(moduleName, config)
-    return config
+    this.config = {}
+    this.config.level = config.level || DEFAULT_LEVEL
+    this.config.provider = config.provider || DEFAULT_PROVIDER
+    // config.logSourceAction will only be TRUE if both  __OW_ACTION_NAME env var is set
+    // and config.logSourceAction is not false
+    this.config.logSourceAction = !!process.env.__OW_ACTION_NAME && config.logSourceAction !== false
+    this.config.label = this.generateLabel(moduleName, this.config)
+    this.config.silent = config.silent || false
+    this.config.transports = config.transports
   }
 
   generateLabel (moduleName, config) {
@@ -120,7 +126,7 @@ class AioLogger {
   * Creates a new AioLogger instance.
   *
   * @param moduleName {string} module name to be included with the log message.
-  * @param config {AioLoggerConfig} configuration for the log framework.
+  * @param [config={}] {AioLoggerConfig} configuration for the log framework.
   * @function
  */
 module.exports = function (moduleName, config) {

@@ -24,7 +24,7 @@ class WinstonLogger {
         this.getWinstonFormat()
       ),
       transports: this.getWinstonTransports(config.transports || DEFAULT_DEST),
-      silent: config.silent || false
+      silent: config.silent
     })
   }
 
