@@ -1,5 +1,10 @@
 # aio-lib-core-logging
 
+[![Version](https://img.shields.io/npm/v/@adobe/aio-lib-core-logging.svg)](https://npmjs.org/package/@adobe/aio-lib-core-logging)
+[![Downloads/week](https://img.shields.io/npm/dw/@adobe/aio-lib-core-logging.svg)](https://npmjs.org/package/@adobe/aio-lib-core-logging)
+[![Build Status](https://travis-ci.com/adobe/aio-lib-core-logging.svg?branch=master)](https://travis-ci.com/adobe/aio-lib-core-logging)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
+[![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/aio-lib-core-logging/master.svg?style=flat-square)](https://codecov.io/gh/adobe/aio-lib-core-logging/)
 [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aio-lib-core-logging.svg)](https://greenkeeper.io/)
 
 ## Install
