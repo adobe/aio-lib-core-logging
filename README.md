@@ -1,5 +1,7 @@
 # aio-lib-core-logging
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/adobe/aio-lib-core-logging.svg)](https://greenkeeper.io/)
+
 ## Install
 
 `npm install @adobe/aio-lib-core-logging`
