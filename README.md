@@ -39,7 +39,7 @@ The config object can have one or more of the following keys.
 - logSourceAction (boolean to control whether to include the action name in the log message)
 - transports (array of custom winston transports)
 
-### Custom Logger
+### Using custom logger
 
 ```javascript
 // Winston Logger
@@ -66,6 +66,9 @@ let aioLogger = require('@adobe/aio-lib-core-logging')('App', {transports: './lo
 const winston = require('winston')
 let aioLogger = require('@adobe/aio-lib-core-logging')('App', {transports: [new winston.transports.File({ filename: './winstoncustomfilelog.txt' })]})
 ```
+
+### Creating custom logger
+This is currently as simple as creating a new logger class under src with all the log level functions defined
 
 ## Explore
 
