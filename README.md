@@ -35,6 +35,7 @@ let aioLogger = require('@adobe/aio-lib-core-logging')('App', config)
 
 The config object can have one or more of the following keys.
 
+- level (max severity logging level to be logged. can be one of error, warn, info, verbose, debug, silly)
 - provider (logging provider. default is winston.)
 - logSourceAction (boolean to control whether to include the action name in the log message)
 - transports (array of custom winston transports)
