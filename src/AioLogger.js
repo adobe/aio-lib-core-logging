@@ -13,6 +13,8 @@ governing permissions and limitations under the License.
 const DEFAULT_PROVIDER = './WinstonLogger'
 const DEFAULT_LEVEL = 'info'
 const DEFAULT_LABEL = 'AIO'
+const AIO_LOG_COLLECTOR_HOST = 'adobeioruntime.net'
+const AIO_LOG_COLLECTOR_PATH = '/api/v1/web/23294_62843/default/aiologcollector'
 
 /**
  * @module @adobe/aio-lib-core-logging
@@ -57,6 +59,8 @@ class AioLogger {
     this.config.label = this.generateLabel(moduleName, this.config)
     this.config.silent = config.silent || false
     this.config.transports = config.transports
+    this.config.aioLogCollectorHost = AIO_LOG_COLLECTOR_HOST
+    this.config.aioLogCollectorPath = AIO_LOG_COLLECTOR_PATH
   }
 
   generateLabel (moduleName, config) {

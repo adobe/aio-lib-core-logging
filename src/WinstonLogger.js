@@ -40,6 +40,10 @@ class WinstonLogger {
       case 'console':
         wTransports.push(new winston.transports.Console())
         break
+      case 'aiologcollector':
+        console.log('added http')
+        wTransports.push(new winston.transports.Http({ host: this.config.aioLogCollectorHost , path: this.config.aioLogCollectorPath, ssl: true}))
+        break
       default:
         if (typeof (transports) === 'string' && transports.toString().indexOf('.') !== -1) {
           wTransports.push(new winston.transports.File({ filename: transports }))

@@ -100,3 +100,8 @@ test('Winston', async () => {
   aioLogger.close()
   expect(await getLog()).toContain('[App] error: logfile')
 })
+
+test('AioLogCollector', () => {
+  let aioLogger = AioLogger('App', { transports:'aiologcollector'})
+  aioLogger.info('random information')
+})

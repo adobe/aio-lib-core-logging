@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const debug = require('debug')
+const request = require('request')
 
 class DebugLogger {
   constructor (config) {
@@ -32,7 +33,15 @@ class DebugLogger {
 
   getDestination () {
     return (message) => {
-      console.log(message)
+      switch (this.config.transports) {
+        case 'aiologcollector':
+          request.post('https://' + this.config.aioLogCollectorHost + this.config.aioLogCollectorPath, {form:{message:message}})
+          break
+        default:
+          console.log(message)
+          break
+      }
+      
     }
   }
 
