@@ -141,6 +141,6 @@ configuration for the log framework
 | [level] | <code>string</code> | logging level for winston, defaults to info |
 | [transports] | <code>string</code> | transport config for winston, defaults to undefined |
 | [silent] | <code>boolean</code> | silent config for winston, defaults to false |
-| [provider] | <code>string</code> | defaults to winston, can be set to either './WinstonLogger' or './DebugLogger' |
+| [provider] | <code>string</code> | defaults to winston, can be set to either 'winston' or 'debug' |
 | [logSourceAction] | <code>boolean</code> | defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If running in an action set logSourceAction to false if you do not want to log the action name. |
 
