@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const DEFAULT_PROVIDER = './WinstonLogger'
+const DEFAULT_PROVIDER = 'winston'
 const DEFAULT_LEVEL = 'info'
 const DEFAULT_LABEL = 'AIO'
 
@@ -26,7 +26,7 @@ const DEFAULT_LABEL = 'AIO'
  * @property {string} [level] logging level for winston, defaults to info
  * @property {string} [transports] transport config for winston, defaults to undefined
  * @property {boolean} [silent] silent config for winston, defaults to false
- * @property {string} [provider] defaults to winston, can be set to either './WinstonLogger' or './DebugLogger'
+ * @property {string} [provider] defaults to winston, can be set to either 'winston' or 'debug'
  * @property {boolean} [logSourceAction] defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If
  * running in an action set logSourceAction to false if you do not want to log the action name.
  */
@@ -43,7 +43,9 @@ class AioLogger {
   */
   constructor (moduleName, config = {}) {
     this.setDefaults(moduleName, config)
-    this.LogProvider = require(this.config.provider)
+    if (this.config.provider === 'winston') this.LogProvider = require('./WinstonLogger')
+    else if (this.config.provider === 'debug') this.LogProvider = require('./DebugLogger')
+    else throw new Error(`log provider ${this.config.provider} is not supported, use one of [winston, debug]`)
     this.logger = new this.LogProvider(this.config)
   }
 

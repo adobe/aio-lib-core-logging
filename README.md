@@ -44,7 +44,7 @@ The config object can have one or more of the following keys.
 
 ```javascript
 // Winston Logger
-let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'./WinstonLogger'})
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'winston'})
 aioLogger.info('Hello logs')
 ```
 
@@ -52,7 +52,7 @@ or
 
 ```javascript
 // Debug Logger
-let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'./DebugLogger'})
+let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'debug'})
 ```
 
 ### Send logs to a file

@@ -22,7 +22,7 @@ describe('config', () => {
   test('when using defaults', () => {
     const aioLogger = AioLogger('App')
 
-    expect(aioLogger.config.provider).toEqual('./WinstonLogger')
+    expect(aioLogger.config.provider).toEqual('winston')
     expect(aioLogger.config.level).toEqual('info')
     expect(aioLogger.config.logSourceAction).toEqual(false)
     expect(aioLogger.config.transports).toEqual(undefined)
@@ -32,7 +32,7 @@ describe('config', () => {
     process.env.__OW_ACTION_NAME = 'fake-action'
     const aioLogger = AioLogger('App')
 
-    expect(aioLogger.config.provider).toEqual('./WinstonLogger')
+    expect(aioLogger.config.provider).toEqual('winston')
     expect(aioLogger.config.level).toEqual('info')
     expect(aioLogger.config.logSourceAction).toEqual(true)
     expect(aioLogger.config.transports).toEqual(undefined)
@@ -42,7 +42,7 @@ describe('config', () => {
     process.env.__OW_ACTION_NAME = 'fake-action'
     const aioLogger = AioLogger('App', { logSourceAction: false })
 
-    expect(aioLogger.config.provider).toEqual('./WinstonLogger')
+    expect(aioLogger.config.provider).toEqual('winston')
     expect(aioLogger.config.level).toEqual('info')
     expect(aioLogger.config.logSourceAction).toEqual(false)
     expect(aioLogger.config.transports).toEqual(undefined)
@@ -54,7 +54,7 @@ test('Debug', () => {
   process.env.DEBUG = '*'
 
   global.console = { log: jest.fn() }
-  const aioLogger = AioLogger('App', { provider: './DebugLogger' })
+  const aioLogger = AioLogger('App', { provider: 'debug' })
   aioLogger.error('message')
   aioLogger.warn('message')
   aioLogger.info('message')
@@ -99,4 +99,15 @@ test('Winston', async () => {
   aioLogger.error('logfile')
   aioLogger.close()
   expect(await getLog()).toContain('[App] error: logfile')
+})
+
+test('bad provider', async () => {
+  expect.hasAssertions()
+  try {
+    AioLogger('App', { provider: '__a_surely_not_supported_provider1234' })
+  } catch (e) {
+    expect(e.message).toEqual(expect.stringContaining('__a_surely_not_supported_provider1234'))
+    expect(e.message).toEqual(expect.stringContaining('winston'))
+    expect(e.message).toEqual(expect.stringContaining('debug'))
+  }
 })
