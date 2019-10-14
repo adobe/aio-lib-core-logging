@@ -16,6 +16,7 @@ class DebugLogger {
     this.config = config
     debug.formatters.s = this.getFormat()
     debug.log = this.getDestination()
+    debug.enable(this.getDebugLevel())
     this.errorLogger = debug(config.label).extend('error')
     this.warnLogger = debug(config.label).extend('warn')
     this.infoLogger = debug(config.label).extend('info')
@@ -34,6 +35,32 @@ class DebugLogger {
     return (message) => {
       console.log(message)
     }
+  }
+
+  getDebugLevel () {
+    let debugLevel
+    let label = this.config.label
+    switch (this.config.level) {
+      case 'error' :
+        debugLevel = label + ':error'
+        break
+      case 'warn' :
+        debugLevel = label + ':error,' + label + ':warn'
+        break
+      case 'info' :
+        debugLevel = label + ':error,' + label + ':warn,' + label + ':info'
+        break
+      case 'verbose' :
+        debugLevel = label + ':error,' + label + ':warn,' + label + ':info,' + label + ':verbose'
+        break
+      case 'debug' :
+        debugLevel = label + ':error,' + label + ':warn,' + label + ':info,' + label + ':verbose,' + label + ':debug'
+        break
+      case 'silly' :
+        debugLevel = label + ':*'
+        break
+    }
+    return process.env.DEBUG ? process.env.DEBUG + ',' + debugLevel : debugLevel
   }
 
   close () {
