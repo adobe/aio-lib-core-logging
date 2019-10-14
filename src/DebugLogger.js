@@ -39,7 +39,7 @@ class DebugLogger {
 
   getDebugLevel () {
     let debugLevel
-    let label = this.config.label
+    const label = this.config.label
     switch (this.config.level) {
       case 'error' :
         debugLevel = label + ':error'
