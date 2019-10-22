@@ -40,6 +40,8 @@ The config object can have one or more of the following keys.
 - logSourceAction (boolean to control whether to include the action name in the log message)
 - transports (array of custom winston transports)
 
+The log level can also be overridden using the env variable AIO_LOG_LEVEL
+
 ### Using custom logger
 
 ```javascript

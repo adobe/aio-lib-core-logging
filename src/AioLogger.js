@@ -51,7 +51,7 @@ class AioLogger {
 
   setDefaults (moduleName, config) {
     this.config = {}
-    this.config.level = config.level || DEFAULT_LEVEL
+    this.config.level = process.env.AIO_LOG_LEVEL || config.level || DEFAULT_LEVEL
     this.config.provider = config.provider || DEFAULT_PROVIDER
     // config.logSourceAction will only be TRUE if both  __OW_ACTION_NAME env var is set
     // and config.logSourceAction is not false

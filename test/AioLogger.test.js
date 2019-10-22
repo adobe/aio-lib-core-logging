@@ -16,6 +16,7 @@ afterEach(() => {
   jest.clearAllMocks()
   delete process.env.__OW_ACTION_NAME
   delete process.env.DEBUG
+  delete process.env.AIO_LOG_LEVEL
 })
 
 describe('config', () => {
@@ -44,6 +45,16 @@ describe('config', () => {
 
     expect(aioLogger.config.provider).toEqual('winston')
     expect(aioLogger.config.level).toEqual('info')
+    expect(aioLogger.config.logSourceAction).toEqual(false)
+    expect(aioLogger.config.transports).toEqual(undefined)
+    expect(aioLogger.config.silent).toEqual(false)
+  })
+  test('when AIO_LOG_LEVEL is used', () => {
+    process.env.AIO_LOG_LEVEL = 'debug'
+    const aioLogger = AioLogger('App', { logSourceAction: false })
+
+    expect(aioLogger.config.provider).toEqual('winston')
+    expect(aioLogger.config.level).toEqual('debug')
     expect(aioLogger.config.logSourceAction).toEqual(false)
     expect(aioLogger.config.transports).toEqual(undefined)
     expect(aioLogger.config.silent).toEqual(false)
@@ -110,4 +121,49 @@ test('bad provider', async () => {
     expect(e.message).toEqual(expect.stringContaining('winston'))
     expect(e.message).toEqual(expect.stringContaining('debug'))
   }
+})
+
+test('with Winston', () => {
+  process.env.AIO_LOG_LEVEL = 'error'
+  const aioLogger = AioLogger('App')
+  aioLogger.error('message')
+  aioLogger.info('message')
+  expect(global.console.log).toHaveBeenCalledTimes(1)
+  delete process.env.DEBUG
+})
+test('with Debug and level being error', () => {
+  process.env.AIO_LOG_LEVEL = 'error'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.error('message')
+  aioLogger.warn('message')
+  expect(global.console.log).toHaveBeenCalledTimes(1)
+})
+test('with Debug and level being warn', () => {
+  process.env.AIO_LOG_LEVEL = 'warn'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.warn('message')
+  aioLogger.info('message')
+  expect(global.console.log).toHaveBeenCalledTimes(1)
+})
+test('with Debug and level being verbose', () => {
+  process.env.AIO_LOG_LEVEL = 'verbose'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.verbose('message')
+  aioLogger.debug('message')
+  expect(global.console.log).toHaveBeenCalledTimes(1)
+})
+test('with Debug and level being debug', () => {
+  process.env.AIO_LOG_LEVEL = 'debug'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.verbose('message')
+  aioLogger.debug('message')
+  aioLogger.silly('message')
+  expect(global.console.log).toHaveBeenCalledTimes(2)
+})
+test('with Debug and level being silly', () => {
+  process.env.AIO_LOG_LEVEL = 'silly'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.debug('message')
+  aioLogger.silly('message')
+  expect(global.console.log).toHaveBeenCalledTimes(2)
 })
