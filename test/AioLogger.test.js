@@ -114,13 +114,12 @@ test('Winston', async () => {
 
 test('bad provider', async () => {
   expect.hasAssertions()
-  try {
-    AioLogger('App', { provider: '__a_surely_not_supported_provider1234' })
-  } catch (e) {
-    expect(e.message).toEqual(expect.stringContaining('__a_surely_not_supported_provider1234'))
-    expect(e.message).toEqual(expect.stringContaining('winston'))
-    expect(e.message).toEqual(expect.stringContaining('debug'))
-  }
+
+  const provider = '__a_surely_not_supported_provider1234'
+  const expectedError = new Error(`log provider ${provider} is not supported, use one of [winston, debug]`)
+  const func = () => AioLogger('App', { provider })
+
+  expect(func).toThrow(expectedError)
 })
 
 test('with Winston', () => {
