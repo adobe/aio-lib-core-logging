@@ -67,24 +67,24 @@ class DebugLogger {
     // TODO
   }
 
-  error (message) {
-    this.errorLogger('%s', message)
+  error (...args) {
+    this.errorLogger(...args)
   }
 
-  warn (message) {
-    this.warnLogger('%s', message)
+  warn (...args) {
+    this.warnLogger(...args)
   }
 
-  info (message) {
-    this.infoLogger('%s', message)
+  info (...args) {
+    this.infoLogger(...args)
   }
 
-  verbose (message) {
-    this.verboseLogger('%s', message)
+  verbose (...args) {
+    this.verboseLogger(...args)
   }
 
-  debug (message) {
-    this.debugLogger('%s', message)
+  debug (...args) {
+    this.debugLogger(...args)
   }
 
   silly (message) {
