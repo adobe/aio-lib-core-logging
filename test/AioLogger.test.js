@@ -170,9 +170,9 @@ test('with Debug and level being silly', () => {
 test('debug with string substitution', () => {
   process.env.AIO_LOG_LEVEL = 'debug'
   const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.info('message %s %s', 'hello', 'world')
+  aioLogger.info('message %s %s %d', 'hello', 'world', 123)
   expect(global.console.log).toHaveBeenLastCalledWith(
-    expect.stringContaining('message hello world')
+    expect.stringContaining('message hello world 123')
   )
 })
 
@@ -180,7 +180,7 @@ test('winston debug with string substitution', async () => {
   fs.removeSync('./logfile.txt')
   fs.closeSync(fs.openSync('./logfile.txt', 'w'))
   const aioLogger = AioLogger('App', { transports: './logfile.txt', logSourceAction: false })
-  aioLogger.info('message %s %s', 'hello', 'world')
+  aioLogger.info('message %s %s %d', 'hello', 'world', 123)
   aioLogger.close()
   function getLog () {
     return new Promise((resolve, reject) => {
@@ -191,5 +191,5 @@ test('winston debug with string substitution', async () => {
       }, 1000)
     })
   }
-  expect(await getLog()).toContain('message hello world')
+  expect(await getLog()).toContain('message hello world 123')
 })

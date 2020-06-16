@@ -87,8 +87,8 @@ class DebugLogger {
     this.debugLogger(...args)
   }
 
-  silly (message) {
-    this.sillyLogger('%s', message)
+  silly (...args) {
+    this.sillyLogger(...args)
   }
 }
 
