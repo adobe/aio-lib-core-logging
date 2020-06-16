@@ -166,3 +166,30 @@ test('with Debug and level being silly', () => {
   aioLogger.silly('message')
   expect(global.console.log).toHaveBeenCalledTimes(2)
 })
+
+test('debug with string substitution', () => {
+  process.env.AIO_LOG_LEVEL = 'debug'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.info('message %s %s', 'hello', 'world')
+  expect(global.console.log).toHaveBeenLastCalledWith(
+    expect.stringContaining('message hello world')
+  )
+})
+
+test('winston debug with string substitution', async () => {
+  fs.removeSync('./logfile.txt')
+  fs.closeSync(fs.openSync('./logfile.txt', 'w'))
+  const aioLogger = AioLogger('App', { transports: './logfile.txt', logSourceAction: false })
+  aioLogger.info('message %s %s', 'hello', 'world')
+  aioLogger.close()
+  function getLog () {
+    return new Promise((resolve, reject) => {
+      setTimeout(function () {
+        const log = fs.readFileSync('./logfile.txt', 'utf8')
+        fs.removeSync('./logfile.txt')
+        resolve(log)
+      }, 1000)
+    })
+  }
+  expect(await getLog()).toContain('message hello world')
+})

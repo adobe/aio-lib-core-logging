@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const winston = require('winston')
-const { combine, timestamp, label } = winston.format
+const { combine, timestamp, label, splat } = winston.format
 const DEFAULT_DEST = 'console'
 
 class WinstonLogger {
@@ -20,6 +20,7 @@ class WinstonLogger {
       level: config.level,
       format: combine(
         label({ label: config.label }),
+        splat(),
         timestamp(),
         this.getWinstonFormat()
       ),
@@ -55,28 +56,28 @@ class WinstonLogger {
     this.logger.close()
   }
 
-  error (message) {
-    this.logger.error(message)
+  error (...args) {
+    this.logger.error(...args)
   }
 
-  warn (message) {
-    this.logger.warn(message)
+  warn (...args) {
+    this.logger.warn(...args)
   }
 
-  info (message) {
-    this.logger.info(message)
+  info (...args) {
+    this.logger.info(...args)
   }
 
-  verbose (message) {
-    this.logger.verbose(message)
+  verbose (...args) {
+    this.logger.verbose(...args)
   }
 
-  debug (message) {
-    this.logger.debug(message)
+  debug (...args) {
+    this.logger.debug(...args)
   }
 
-  silly (message) {
-    this.logger.silly(message)
+  silly (...args) {
+    this.logger.silly(...args)
   }
 }
 
