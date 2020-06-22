@@ -15,6 +15,7 @@ class DebugLogger {
   constructor (config) {
     this.config = config
     debug.formatters.s = this.getFormat()
+    debug.formatters.d = this.getFormat()
     debug.log = this.getDestination()
     debug.enable(this.getDebugLevel())
     this.errorLogger = debug(config.label).extend('error')
