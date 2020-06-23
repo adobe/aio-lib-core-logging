@@ -77,50 +77,50 @@ class AioLogger {
 
   /** log error message.
   *
-  * @param message {string} message to be logged.
+  * @param {...string} messages message to be logged.
   */
-  error (message) {
-    this.logger.error(message)
+  error (...messages) {
+    this.logger.error(...messages)
   }
 
   /** log warn message.
   *
-  * @param message {string} message to be logged.
+  * @param {...string} messages message to be logged.
   */
-  warn (message) {
-    this.logger.warn(message)
+  warn (...messages) {
+    this.logger.warn(...messages)
   }
 
   /** log info message.
   *
-  * @param message {string} message to be logged.
+  * @param {...string} messages message to be logged.
   */
-  info (message) {
-    this.logger.info(message)
+  info (...messages) {
+    this.logger.info(...messages)
   }
 
   /** log verbose message.
   *
-  * @param message {string} message to be logged.
+  * @param {...string} messages message to be logged.
   */
-  verbose (message) {
-    this.logger.verbose(message)
+  verbose (...messages) {
+    this.logger.verbose(...messages)
   }
 
   /** log debug message.
   *
-  * @param message {string} message to be logged.
+  * @param {...string} messages message to be logged.
   */
-  debug (message) {
-    this.logger.debug(message)
+  debug (...messages) {
+    this.logger.debug(...messages)
   }
 
   /** log silly message.
   *
-  * @param message {string} message to be logged.
+  * @param {...string} messages message to be logged.
   */
-  silly (message) {
-    this.logger.silly(message)
+  silly (...messages) {
+    this.logger.silly(...messages)
   }
 }
 

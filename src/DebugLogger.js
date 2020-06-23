@@ -15,6 +15,7 @@ class DebugLogger {
   constructor (config) {
     this.config = config
     debug.formatters.s = this.getFormat()
+    debug.formatters.d = this.getFormat()
     debug.log = this.getDestination()
     debug.enable(this.getDebugLevel())
     this.errorLogger = debug(config.label).extend('error')
@@ -87,8 +88,8 @@ class DebugLogger {
     this.debugLogger(...args)
   }
 
-  silly (message) {
-    this.sillyLogger('%s', message)
+  silly (...args) {
+    this.sillyLogger(...args)
   }
 }
 
