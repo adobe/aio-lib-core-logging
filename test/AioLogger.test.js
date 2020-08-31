@@ -262,6 +262,39 @@ test('with Debug and DEBUG=App and AIO_LOG_LEVEL=debug', () => {
   expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('verbose'))
   expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('debug'))
 })
+
+test('with Debug and DEBUG=App:debug and AIO_LOG_LEVEL=error', () => {
+  // here the log level is ignored and only debug logs will be shown
+  process.env.DEBUG = 'App:debug'
+  process.env.AIO_LOG_LEVEL = 'error'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.error('message')
+  aioLogger.warn('message')
+  aioLogger.info('message')
+  aioLogger.verbose('message')
+  aioLogger.debug('message')
+  aioLogger.silly('message')
+  aioLogger.close()
+  expect(global.console.log).toHaveBeenCalledTimes(1)
+  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('debug'))
+})
+
+test('with Debug and DEBUG=App:warn and AIO_LOG_LEVEL=silly', () => {
+  // here the log level is ignored and only error logs will be shown
+  process.env.DEBUG = 'App:warn'
+  process.env.AIO_LOG_LEVEL = 'silly'
+  const aioLogger = AioLogger('App', { provider: 'debug' })
+  aioLogger.error('message')
+  aioLogger.warn('message')
+  aioLogger.info('message')
+  aioLogger.verbose('message')
+  aioLogger.debug('message')
+  aioLogger.silly('message')
+  aioLogger.close()
+  expect(global.console.log).toHaveBeenCalledTimes(1)
+  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+})
+
 test('with Debug and DEBUG=App and AIO_LOG_LEVEL=silly', () => {
   process.env.DEBUG = 'App'
   process.env.AIO_LOG_LEVEL = 'silly'
