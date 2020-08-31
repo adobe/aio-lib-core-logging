@@ -17,12 +17,13 @@ class DebugLogger {
     debug.formatters.s = this.getFormat()
     debug.formatters.d = this.getFormat()
     debug.log = this.getDestination()
-    // make sure to take always take into account the latest DEBUG env var
+    // make sure to always take into account the latest DEBUG env var
     debug.enable(process.env.DEBUG)
     if (debug.enabled(this.config.label)) {
-      // => if we are here it means process.env.DEBUG === this.config.label || `${this.config.label}*`
+      // => if we are here it means process.env.DEBUG === this.config.label
+      // (`${this.config.label}*` will also match the condition but it will set all log levels anyways)
       // if let's say process.env.DEBUG === `${this.config.label}:debug` then we won't get
-      // into this branch and only warning logs will be shown
+      // into this branch and only debug logs will be shown
       debug.enable(this.getDebugLevel())
     }
     this.errorLogger = debug(config.label).extend('error')
