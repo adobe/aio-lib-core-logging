@@ -154,7 +154,7 @@ test('with Debug and DEBUG=App*', () => {
   expect(global.console.log).toHaveBeenCalledTimes(6)
 })
 test('with Debug and DEBUG=Ap*', () => {
-  process.env.DEBUG = 'App*'
+  process.env.DEBUG = 'Ap*'
   const aioLogger = AioLogger('App', { provider: 'debug' })
   aioLogger.error('message')
   aioLogger.warn('message')
