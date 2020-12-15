@@ -71,11 +71,12 @@ test('Winston', async () => {
   aioLogger.error('message')
   aioLogger.warn('message')
   aioLogger.info('message')
+  aioLogger.log('message')
   aioLogger.verbose('message')
   aioLogger.debug('message')
   aioLogger.silly('message')
   aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(3)
+  expect(global.console.log).toHaveBeenCalledTimes(4)
   expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining('[AIO fake-action] info: message'))
 
   aioLogger = AioLogger('App', { transports: './logfile.txt', logSourceAction: false })
@@ -123,11 +124,12 @@ test('with Debug and DEBUG=*', () => {
   aioLogger.error('message')
   aioLogger.warn('message')
   aioLogger.info('message')
+  aioLogger.log('message')
   aioLogger.verbose('message')
   aioLogger.debug('message')
   aioLogger.silly('message')
   aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(6)
+  expect(global.console.log).toHaveBeenCalledTimes(7)
 })
 test('with Debug and DEBUG=App:*', () => {
   process.env.DEBUG = 'App:*'
