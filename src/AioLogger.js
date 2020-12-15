@@ -100,7 +100,7 @@ class AioLogger {
   }
 
   /**
-   * @alias info
+   * log info message.
    * @param {...string} messages message to be logged.
    */
   log (...messages) {

@@ -1,17 +1,3 @@
-## Modules
-
-<dl>
-<dt><a href="#module_@adobe/aio-lib-core-logging">@adobe/aio-lib-core-logging</a></dt>
-<dd></dd>
-</dl>
-
-## Functions
-
-<dl>
-<dt><a href="#info">info(...messages)</a></dt>
-<dd></dd>
-</dl>
-
 <a name="module_@adobe/aio-lib-core-logging"></a>
 
 ## @adobe/aio-lib-core-logging
@@ -24,6 +10,7 @@
             * [.error(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
             * [.warn(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
             * [.info(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
+            * [.log(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
             * [.verbose(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
             * [.debug(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
             * [.silly(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
@@ -55,6 +42,7 @@ Winston is used by default.
     * [.error(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
     * [.warn(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
     * [.info(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
+    * [.log(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
     * [.verbose(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
     * [.debug(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
     * [.silly(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
@@ -101,6 +89,17 @@ log warn message.
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info"></a>
 
 ##### aioLogger.info(...messages)
+log info message.
+
+**Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...messages | <code>string</code> | message to be logged. |
+
+<a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log"></a>
+
+##### aioLogger.log(...messages)
 log info message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
@@ -157,13 +156,4 @@ configuration for the log framework
 | [silent] | <code>boolean</code> | silent config for winston, defaults to false |
 | [provider] | <code>string</code> | defaults to winston, can be set to either 'winston' or 'debug' |
 | [logSourceAction] | <code>boolean</code> | defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If running in an action set logSourceAction to false if you do not want to log the action name. |
-
-<a name="info"></a>
-
-## info(...messages)
-**Kind**: global function  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
 
