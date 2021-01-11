@@ -7,12 +7,13 @@
         * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
             * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
             * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
-            * [.error(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
-            * [.warn(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
-            * [.info(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
-            * [.verbose(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
-            * [.debug(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
-            * [.silly(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
+            * [.error(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
+            * [.warn(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
+            * [.info(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
+            * [.log(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
+            * [.verbose(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
+            * [.debug(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
+            * [.silly(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
         * [~AioLoggerConfig](#module_@adobe/aio-lib-core-logging--module.exports..AioLoggerConfig) : <code>object</code>
 
 <a name="exp_module_@adobe/aio-lib-core-logging--module.exports"></a>
@@ -38,12 +39,13 @@ Winston is used by default.
 * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
     * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
     * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
-    * [.error(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
-    * [.warn(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
-    * [.info(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
-    * [.verbose(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
-    * [.debug(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
-    * [.silly(message)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
+    * [.error(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
+    * [.warn(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
+    * [.info(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
+    * [.log(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
+    * [.verbose(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
+    * [.debug(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
+    * [.silly(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
 
 <a name="new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new"></a>
 
@@ -64,69 +66,80 @@ Close the logger. Useful when writing logs to a file or stream.
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error"></a>
 
-##### aioLogger.error(message)
+##### aioLogger.error(...messages)
 log error message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| message | <code>string</code> | message to be logged. |
+| ...messages | <code>string</code> | message to be logged. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn"></a>
 
-##### aioLogger.warn(message)
+##### aioLogger.warn(...messages)
 log warn message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| message | <code>string</code> | message to be logged. |
+| ...messages | <code>string</code> | message to be logged. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info"></a>
 
-##### aioLogger.info(message)
+##### aioLogger.info(...messages)
 log info message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| message | <code>string</code> | message to be logged. |
+| ...messages | <code>string</code> | message to be logged. |
+
+<a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log"></a>
+
+##### aioLogger.log(...messages)
+log info message.
+
+**Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| ...messages | <code>string</code> | message to be logged. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose"></a>
 
-##### aioLogger.verbose(message)
+##### aioLogger.verbose(...messages)
 log verbose message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| message | <code>string</code> | message to be logged. |
+| ...messages | <code>string</code> | message to be logged. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug"></a>
 
-##### aioLogger.debug(message)
+##### aioLogger.debug(...messages)
 log debug message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| message | <code>string</code> | message to be logged. |
+| ...messages | <code>string</code> | message to be logged. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly"></a>
 
-##### aioLogger.silly(message)
+##### aioLogger.silly(...messages)
 log silly message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| message | <code>string</code> | message to be logged. |
+| ...messages | <code>string</code> | message to be logged. |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLoggerConfig"></a>
 

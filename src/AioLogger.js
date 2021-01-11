@@ -99,6 +99,14 @@ class AioLogger {
     this.logger.info(...messages)
   }
 
+  /**
+   * log info message.
+   * @param {...string} messages message to be logged.
+   */
+  log (...messages) {
+    this.logger.info(...messages)
+  }
+
   /** log verbose message.
   *
   * @param {...string} messages message to be logged.
