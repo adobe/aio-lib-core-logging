@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/aio-lib-core-logging/master.svg?style=flat-square)](https://codecov.io/gh/adobe/aio-lib-core-logging/)
 
+Node.js Logger module for use by the Adobe I/O SDK
 
 ## Install
 
