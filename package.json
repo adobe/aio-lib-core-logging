@@ -22,19 +22,19 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@adobe/eslint-config-aio-lib-config": "^2",
     "@types/jest": "^25.1.0",
     "codecov": "^3.6.1",
-    "@adobe/eslint-config-aio-lib-config": "^2",
     "eslint": "^8",
     "eslint-config-standard": "^17",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-jest": "^23",
     "eslint-plugin-jsdoc": "^37",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-n": "^15",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6",
     "fs-extra": "^9.0.0",
     "jest": "^24.9.0",
-    "jsdoc-to-markdown": "^5.0.1"
+    "jsdoc-to-markdown": "^5.0.3"
   }
 }
