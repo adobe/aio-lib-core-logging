@@ -4,8 +4,8 @@
   "description": "Logger framework for the Adobe I/O SDK",
   "main": "src/AioLogger.js",
   "scripts": {
-    "test": "npm run lint && jest --coverage",
     "lint": "eslint .",
+    "test": "npm run lint && jest --coverage",
     "docs": "jsdoc2md -f 'src/*.js' > doc/api.md"
   },
   "repository": {
