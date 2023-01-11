@@ -29,6 +29,11 @@ describe('variadicToString', () => {
     expect(variadicToString(...args)).not.toBeDefined()
   })
 
+  test('Error object', () => {
+    const args = [new Error('some error')]
+    expect(variadicToString(...args)).toMatch('Error: some error')
+  })
+
   test('simple strings', () => {
     const args = ['abc', 'def', 'ghi']
     expect(variadicToString(...args)).toEqual(args.join(' '))
