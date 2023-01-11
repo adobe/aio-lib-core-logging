@@ -84,7 +84,7 @@ describe('winston logger', () => {
     fs.closeSync(fs.openSync(LOG_FILE_PATH, 'w'))
   })
 
-  test('Winston', async () => {
+  test('default, with action name', async () => {
     process.env.__OW_ACTION_NAME = 'fake-action'
 
     const aioLogger = AioLogger()
@@ -99,11 +99,11 @@ describe('winston logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(4)
+    expect(global.console.log).toHaveBeenCalledTimes(4) // log, info, error, warn
     expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[AIO fake-action] info: ${message}`))
   })
 
-  test('a', async () => {
+  test('use log file path', async () => {
     const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
     const message = 'message'
 
@@ -113,7 +113,7 @@ describe('winston logger', () => {
     expect(await getLog(LOG_FILE_PATH)).toContain(`[App] error: ${message}`)
   })
 
-  test('b', async () => {
+  test('use winston.transports.file', async () => {
     const winston = require('winston')
     const aioLogger = AioLogger('App', { transports: [new winston.transports.File({ filename: LOG_FILE_PATH })], logSourceAction: false })
     const message = 'message'
@@ -124,7 +124,7 @@ describe('winston logger', () => {
     expect(await getLog(LOG_FILE_PATH)).toContain(`[App] error: ${message}`)
   })
 
-  test('c', () => {
+  test('with AIO_LOG_LEVEL = error', () => {
     process.env.AIO_LOG_LEVEL = 'error'
 
     const aioLogger = AioLogger('App')
@@ -133,7 +133,7 @@ describe('winston logger', () => {
     aioLogger.error(message)
     aioLogger.info(message)
 
-    expect(global.console.log).toHaveBeenCalledTimes(1)
+    expect(global.console.log).toHaveBeenCalledTimes(1) // error level only
   })
 
   test('bad provider', async () => {
@@ -172,7 +172,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(7)
+    expect(global.console.log).toHaveBeenCalledTimes(7) // all levels (extra is log, which is effectively info)
   })
 
   test('DEBUG=App:*', () => {
@@ -189,7 +189,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(6)
+    expect(global.console.log).toHaveBeenCalledTimes(6) // all levels
   })
 
   test('DEBUG=App*', () => {
@@ -206,7 +206,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(6)
+    expect(global.console.log).toHaveBeenCalledTimes(6) // all levels
   })
 
   test('DEBUG=Ap*', () => {
@@ -240,8 +240,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    // info, warn, error
-    expect(global.console.log).toHaveBeenCalledTimes(3)
+    expect(global.console.log).toHaveBeenCalledTimes(3) // info, warn, error levels
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
@@ -262,7 +261,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(1)
+    expect(global.console.log).toHaveBeenCalledTimes(1) // error level only
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
   })
 
@@ -281,7 +280,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(2)
+    expect(global.console.log).toHaveBeenCalledTimes(2) // warn and error levels only
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
   })
@@ -301,7 +300,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(3)
+    expect(global.console.log).toHaveBeenCalledTimes(3) // info, warn, error levels only
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
@@ -322,7 +321,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(4)
+    expect(global.console.log).toHaveBeenCalledTimes(4) // verbose, info, warn, error levels only
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
@@ -344,7 +343,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(5)
+    expect(global.console.log).toHaveBeenCalledTimes(5) // debug, verbose, info, warn, error levels only
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
     expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
@@ -373,7 +372,7 @@ describe('debug logger', () => {
   })
 
   test('DEBUG=App:warn and AIO_LOG_LEVEL=silly', () => {
-    // here the log level is ignored and only error logs will be shown
+    // here the log level is ignored and only WARN logs will be shown
     process.env.DEBUG = 'App:warn'
     process.env.AIO_LOG_LEVEL = 'silly'
 
@@ -407,7 +406,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(6)
+    expect(global.console.log).toHaveBeenCalledTimes(6) // shows all log levels
   })
 
   test('DEBUG=Ap', () => {
@@ -425,7 +424,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(0)
+    expect(global.console.log).toHaveBeenCalledTimes(0) // no match
   })
 
   test('DEBUG=Appnot', () => {
@@ -442,7 +441,7 @@ describe('debug logger', () => {
     aioLogger.silly(message)
     aioLogger.close()
 
-    expect(global.console.log).toHaveBeenCalledTimes(0)
+    expect(global.console.log).toHaveBeenCalledTimes(0) // no match
   })
 
   test('with string substitution and DEBUG=App', () => {
