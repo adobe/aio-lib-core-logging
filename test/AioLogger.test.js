@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 const AioLogger = require('../src/AioLogger')
 const fs = require('fs-extra')
 const { variadicToString } = require('../src/util')
+const util = require('node:util')
 
 global.console = { log: jest.fn() }
 
@@ -36,7 +37,7 @@ describe('variadicToString', () => {
   test('objects', () => {
     const args = [{ foo: 'bar' }, 'some string', ['a', 'b']]
     expect(variadicToString(...args)).toEqual(
-      `${JSON.stringify(args[0])} ${args[1]} ${JSON.stringify(args[2])}`
+      `${util.inspect(args[0])} ${args[1]} ${util.inspect(args[2])}`
     )
   })
 

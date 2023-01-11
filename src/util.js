@@ -55,8 +55,8 @@ function formatter (target, current, ...rest) {
 function printer (...args) {
   // map objects to their string equivalents
   const m = args.map(arg => {
-    if (typeof (arg) === 'object') {
-      return JSON.stringify(arg)
+    if (typeof (arg) !== 'string') {
+      return util.inspect(arg)
     }
     return arg
   })
