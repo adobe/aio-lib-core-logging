@@ -103,6 +103,23 @@ describe('winston logger', () => {
     expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[AIO fake-action] info: ${message}`))
   })
 
+  test('default, with variadic message args', async () => {
+    const aioLogger = AioLogger()
+    const message = ['messageA', 'messageB']
+
+    aioLogger.error(...message)
+    aioLogger.warn(...message)
+    aioLogger.info(...message)
+    aioLogger.log(...message)
+    aioLogger.verbose(...message)
+    aioLogger.debug(...message)
+    aioLogger.silly(...message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(4) // log, info, error, warn
+    expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[AIO] info: ${message.join(' ')}`))
+  })
+
   test('use log file path', async () => {
     const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
     const message = 'message'
@@ -173,6 +190,25 @@ describe('debug logger', () => {
     aioLogger.close()
 
     expect(global.console.log).toHaveBeenCalledTimes(7) // all levels (extra is log, which is effectively info)
+  })
+
+  test('DEBUG=*, with variadic message args', () => {
+    process.env.DEBUG = '*'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = ['messageA', 'messageB']
+
+    aioLogger.error(...message)
+    aioLogger.warn(...message)
+    aioLogger.info(...message)
+    aioLogger.log(...message)
+    aioLogger.verbose(...message)
+    aioLogger.debug(...message)
+    aioLogger.silly(...message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(7) // all levels (extra is log, which is effectively info)
+    expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[App] silly: ${message.join(' ')}`))
   })
 
   test('DEBUG=App:*', () => {
