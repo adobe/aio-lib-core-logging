@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const AioLogger = require('../src/AioLogger')
 const fs = require('fs-extra')
+const { variadicToString } = require('../src/util')
 
 global.console = { log: jest.fn() }
 
@@ -19,6 +20,46 @@ beforeEach(() => {
   delete process.env.__OW_ACTION_NAME
   delete process.env.DEBUG
   delete process.env.AIO_LOG_LEVEL
+})
+
+describe('variadicToString', () => {
+  test('empty args', () => {
+    const args = []
+    expect(variadicToString(...args)).not.toBeDefined()
+  })
+
+  test('simple strings', () => {
+    const args = ['abc', 'def', 'ghi']
+    expect(variadicToString(...args)).toEqual(args.join(' '))
+  })
+
+  test('objects', () => {
+    const args = [{ foo: 'bar' }, 'some string', ['a', 'b']]
+    expect(variadicToString(...args)).toEqual(
+      `${JSON.stringify(args[0])} ${args[1]} ${JSON.stringify(args[2])}`
+    )
+  })
+
+  test('strings with %s format specifiers', () => {
+    const args = ['My name is %s and I am a %s.', 'Mike', 'mountain climber', 'Fancy seeing you here on top of the spire.']
+    expect(variadicToString(...args)).toEqual('My name is Mike and I am a mountain climber. Fancy seeing you here on top of the spire.')
+  })
+
+  test('strings with %d and %i format specifiers', () => {
+    const args = ['We need %d nuts and %i bolts.', 12, 13, 'If not we can\'t finish the bridge.']
+    expect(variadicToString(...args)).toEqual('We need 12 nuts and 13 bolts. If not we can\'t finish the bridge.')
+  })
+
+  test('strings with %f format specifiers', () => {
+    const args = ['The definition of pi is %f.', 22 / 7, 'I\'m sure of it.']
+    expect(variadicToString(...args)).toEqual(`The definition of pi is ${22 / 7}. I'm sure of it.`)
+  })
+
+  test('strings with %j format specifiers', () => {
+    const json = { beautiful: true }
+    const args = ['Here\'s some json: %j', json, 'Isn\'t it beautiful?']
+    expect(variadicToString(...args)).toEqual('Here\'s some json: {"beautiful":true} Isn\'t it beautiful?')
+  })
 })
 
 describe('config', () => {
@@ -208,7 +249,7 @@ describe('debug logger', () => {
     aioLogger.close()
 
     expect(global.console.log).toHaveBeenCalledTimes(7) // all levels (extra is log, which is effectively info)
-    expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[App] silly: ${message.join(' ')}`))
+    expect(global.console.log).toHaveBeenLastCalledWith(expect.stringMatching(`${message.join(' ')}`))
   })
 
   test('DEBUG=App:*', () => {

@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const winston = require('winston')
+const { variadicToString } = require('./util')
 const { combine, timestamp, label, splat } = winston.format
 const DEFAULT_DEST = 'console'
 
@@ -57,27 +58,27 @@ class WinstonLogger {
   }
 
   error (...args) {
-    this.logger.error(...args)
+    this.logger.error(variadicToString(...args))
   }
 
   warn (...args) {
-    this.logger.warn(...args)
+    this.logger.warn(variadicToString(...args))
   }
 
   info (...args) {
-    this.logger.info(...args)
+    this.logger.info(variadicToString(...args))
   }
 
   verbose (...args) {
-    this.logger.verbose(...args)
+    this.logger.verbose(variadicToString(...args))
   }
 
   debug (...args) {
-    this.logger.debug(...args)
+    this.logger.debug(variadicToString(...args))
   }
 
   silly (...args) {
-    this.logger.silly(...args)
+    this.logger.silly(variadicToString(...args))
   }
 }
 

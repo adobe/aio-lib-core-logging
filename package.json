@@ -37,7 +37,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6",
     "fs-extra": "^9.0.0",
-    "jest": "^24.9.0",
+    "jest": "^29.3.1",
     "jsdoc-to-markdown": "^5.0.3"
   }
 }
