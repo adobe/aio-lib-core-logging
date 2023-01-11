@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2023 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -31,6 +31,7 @@ describe('config', () => {
     expect(aioLogger.config.transports).toEqual(undefined)
     expect(aioLogger.config.silent).toEqual(false)
   })
+
   test('when using defaults and __OW_ACTION_NAME is set', () => {
     process.env.__OW_ACTION_NAME = 'fake-action'
     const aioLogger = AioLogger('App')
@@ -41,6 +42,7 @@ describe('config', () => {
     expect(aioLogger.config.transports).toEqual(undefined)
     expect(aioLogger.config.silent).toEqual(false)
   })
+
   test('when __OW_ACTION_NAME is set and config.logSourceAction = false', () => {
     process.env.__OW_ACTION_NAME = 'fake-action'
     const aioLogger = AioLogger('App', { logSourceAction: false })
@@ -51,6 +53,7 @@ describe('config', () => {
     expect(aioLogger.config.transports).toEqual(undefined)
     expect(aioLogger.config.silent).toEqual(false)
   })
+
   test('when AIO_LOG_LEVEL is used', () => {
     process.env.AIO_LOG_LEVEL = 'debug'
     const aioLogger = AioLogger('App', { logSourceAction: false })
@@ -63,303 +66,394 @@ describe('config', () => {
   })
 })
 
-test('Winston', async () => {
-  process.env.__OW_ACTION_NAME = 'fake-action'
-  fs.removeSync('./logfile.txt')
-  fs.closeSync(fs.openSync('./logfile.txt', 'w'))
-  let aioLogger = AioLogger()
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.log('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(4)
-  expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining('[AIO fake-action] info: message'))
+describe('winston logger', () => {
+  const LOG_FILE_PATH = './logfile.txt'
 
-  aioLogger = AioLogger('App', { transports: './logfile.txt', logSourceAction: false })
-  aioLogger.error('logfile')
-  aioLogger.close()
-  function getLog () {
-    return new Promise((resolve, reject) => {
+  function getLog (logFilePath = LOG_FILE_PATH) {
+    return new Promise((resolve) => {
       setTimeout(function () {
-        const log = fs.readFileSync('./logfile.txt', 'utf8')
-        fs.removeSync('./logfile.txt')
+        const log = fs.readFileSync(logFilePath, 'utf8')
+        fs.removeSync(logFilePath)
         resolve(log)
       }, 1000)
     })
   }
-  expect(await getLog()).toContain('[App] error: logfile')
 
-  const winston = require('winston')
-  aioLogger = AioLogger('App', { transports: [new winston.transports.File({ filename: './logfile.txt' })], logSourceAction: false })
-  aioLogger.error('logfile')
-  aioLogger.close()
-  expect(await getLog()).toContain('[App] error: logfile')
-})
+  beforeAll(() => {
+    fs.removeSync(LOG_FILE_PATH)
+    fs.closeSync(fs.openSync(LOG_FILE_PATH, 'w'))
+  })
 
-test('bad provider', async () => {
-  expect.hasAssertions()
+  test('Winston', async () => {
+    process.env.__OW_ACTION_NAME = 'fake-action'
 
-  const provider = '__a_surely_not_supported_provider1234'
-  const expectedError = new Error(`log provider ${provider} is not supported, use one of [winston, debug]`)
-  const func = () => AioLogger('App', { provider })
+    const aioLogger = AioLogger()
+    const message = 'message'
 
-  expect(func).toThrow(expectedError)
-})
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.log(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
 
-test('with Winston', () => {
-  process.env.AIO_LOG_LEVEL = 'error'
-  const aioLogger = AioLogger('App')
-  aioLogger.error('message')
-  aioLogger.info('message')
-  expect(global.console.log).toHaveBeenCalledTimes(1)
-})
+    expect(global.console.log).toHaveBeenCalledTimes(4)
+    expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[AIO fake-action] info: ${message}`))
+  })
 
-test('with Debug and DEBUG=*', () => {
-  process.env.DEBUG = '*'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.log('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(7)
-})
-test('with Debug and DEBUG=App:*', () => {
-  process.env.DEBUG = 'App:*'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(6)
-})
-test('with Debug and DEBUG=App*', () => {
-  process.env.DEBUG = 'App*'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(6)
-})
-test('with Debug and DEBUG=Ap*', () => {
-  process.env.DEBUG = 'Ap*'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(6)
-})
-test('with Debug and DEBUG=App and AIO_LOG_LEVEL', () => {
-  process.env.DEBUG = 'App'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  // info, warn, error
-  expect(global.console.log).toHaveBeenCalledTimes(3)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
-})
-test('with Debug and DEBUG=App and AIO_LOG_LEVEL=error', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'error'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(1)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
-})
-test('with Debug and DEBUG=App and AIO_LOG_LEVEL=warn', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'warn'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(2)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
-})
-test('with Debug and DEBUG=App and AIO_LOG_LEVEL=info', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'info'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(3)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
-})
-test('with Debug and DEBUG=App and default AIO_LOG_LEVEL=verbose', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'verbose'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(4)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('verbose'))
+  test('a', async () => {
+    const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.close()
+
+    expect(await getLog(LOG_FILE_PATH)).toContain(`[App] error: ${message}`)
+  })
+
+  test('b', async () => {
+    const winston = require('winston')
+    const aioLogger = AioLogger('App', { transports: [new winston.transports.File({ filename: LOG_FILE_PATH })], logSourceAction: false })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.close()
+
+    expect(await getLog(LOG_FILE_PATH)).toContain(`[App] error: ${message}`)
+  })
+
+  test('c', () => {
+    process.env.AIO_LOG_LEVEL = 'error'
+
+    const aioLogger = AioLogger('App')
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.info(message)
+
+    expect(global.console.log).toHaveBeenCalledTimes(1)
+  })
+
+  test('bad provider', async () => {
+    expect.hasAssertions()
+
+    const provider = '__a_surely_not_supported_provider1234'
+    const expectedError = new Error(`log provider ${provider} is not supported, use one of [winston, debug]`)
+    const func = () => AioLogger('App', { provider })
+
+    expect(func).toThrow(expectedError)
+  })
+
+  test('with string substitution and file transport', async () => {
+    // change-me: do not hit real file system and do not wait
+    const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
+    aioLogger.info('message %s %s %d', 'hello', 'world', 123)
+    aioLogger.close()
+
+    expect(await getLog(LOG_FILE_PATH)).toContain('message hello world 123')
+  })
 })
 
-test('with Debug and DEBUG=App and AIO_LOG_LEVEL=debug', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'debug'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(5)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('verbose'))
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('debug'))
-})
+describe('debug logger', () => {
+  test('DEBUG=*', () => {
+    process.env.DEBUG = '*'
 
-test('with Debug and DEBUG=App:debug and AIO_LOG_LEVEL=error', () => {
-  // here the log level is ignored and only debug logs will be shown
-  process.env.DEBUG = 'App:debug'
-  process.env.AIO_LOG_LEVEL = 'error'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(1)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('debug'))
-})
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
 
-test('with Debug and DEBUG=App:warn and AIO_LOG_LEVEL=silly', () => {
-  // here the log level is ignored and only error logs will be shown
-  process.env.DEBUG = 'App:warn'
-  process.env.AIO_LOG_LEVEL = 'silly'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(1)
-  expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
-})
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.log(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
 
-test('with Debug and DEBUG=App and AIO_LOG_LEVEL=silly', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'silly'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(6)
-})
-test('with Debug and DEBUG=Ap', () => {
-  process.env.DEBUG = 'Ap'
-  process.env.AIO_LOG_LEVEL = 'silly'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(0)
-})
-test('with Debug and DEBUG=Appnot', () => {
-  process.env.DEBUG = 'Apnot'
-  process.env.AIO_LOG_LEVEL = 'silly'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.error('message')
-  aioLogger.warn('message')
-  aioLogger.info('message')
-  aioLogger.verbose('message')
-  aioLogger.debug('message')
-  aioLogger.silly('message')
-  aioLogger.close()
-  expect(global.console.log).toHaveBeenCalledTimes(0)
-})
+    expect(global.console.log).toHaveBeenCalledTimes(7)
+  })
 
-test('debug with string substitution and DEBUG=App', () => {
-  process.env.DEBUG = 'App'
-  process.env.AIO_LOG_LEVEL = 'debug'
-  const aioLogger = AioLogger('App', { provider: 'debug' })
-  aioLogger.info('message %s %s %d', 'hello', 'world', 123)
-  expect(global.console.log).toHaveBeenLastCalledWith(
-    expect.stringContaining('message hello world 123')
-  )
-})
+  test('DEBUG=App:*', () => {
+    process.env.DEBUG = 'App:*'
 
-test('winston debug with string substitution and file transport', async () => {
-  // change-me: do not hit real file system and do not wait
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
 
-  fs.removeSync('./logfile.txt')
-  fs.closeSync(fs.openSync('./logfile.txt', 'w'))
-  const aioLogger = AioLogger('App', { transports: './logfile.txt', logSourceAction: false })
-  aioLogger.info('message %s %s %d', 'hello', 'world', 123)
-  aioLogger.close()
-  async function getLog () {
-    await new Promise((resolve, reject) => setTimeout(resolve, 100))
-    const log = fs.readFileSync('./logfile.txt', 'utf8')
-    fs.removeSync('./logfile.txt')
-    return log
-  }
-  expect(await getLog()).toContain('message hello world 123')
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(6)
+  })
+
+  test('DEBUG=App*', () => {
+    process.env.DEBUG = 'App*'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(6)
+  })
+
+  test('DEBUG=Ap*', () => {
+    process.env.DEBUG = 'Ap*'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(6)
+  })
+
+  test('DEBUG=App and AIO_LOG_LEVEL', () => {
+    process.env.DEBUG = 'App'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    // info, warn, error
+    expect(global.console.log).toHaveBeenCalledTimes(3)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
+  })
+
+  test('DEBUG=App and AIO_LOG_LEVEL=error', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'error'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(1)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
+  })
+
+  test('DEBUG=App and AIO_LOG_LEVEL=warn', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'warn'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(2)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+  })
+
+  test('DEBUG=App and AIO_LOG_LEVEL=info', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'info'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(3)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
+  })
+
+  test('DEBUG=App and default AIO_LOG_LEVEL=verbose', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'verbose'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(4)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('verbose'))
+  })
+
+  test('with Debug and DEBUG=App and AIO_LOG_LEVEL=debug', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'debug'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(5)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('error'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('info'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('verbose'))
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('debug'))
+  })
+
+  test('DEBUG=App:debug and AIO_LOG_LEVEL=error', () => {
+    // here the log level is ignored and only debug logs will be shown
+    process.env.DEBUG = 'App:debug'
+    process.env.AIO_LOG_LEVEL = 'error'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(1)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('debug'))
+  })
+
+  test('DEBUG=App:warn and AIO_LOG_LEVEL=silly', () => {
+    // here the log level is ignored and only error logs will be shown
+    process.env.DEBUG = 'App:warn'
+    process.env.AIO_LOG_LEVEL = 'silly'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(1)
+    expect(global.console.log).toHaveBeenCalledWith(expect.stringContaining('warn'))
+  })
+
+  test('DEBUG=App and AIO_LOG_LEVEL=silly', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'silly'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(6)
+  })
+
+  test('DEBUG=Ap', () => {
+    process.env.DEBUG = 'Ap'
+    process.env.AIO_LOG_LEVEL = 'silly'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(0)
+  })
+
+  test('DEBUG=Appnot', () => {
+    process.env.DEBUG = 'Apnot'
+    process.env.AIO_LOG_LEVEL = 'silly'
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    const message = 'message'
+
+    aioLogger.error(message)
+    aioLogger.warn(message)
+    aioLogger.info(message)
+    aioLogger.verbose(message)
+    aioLogger.debug(message)
+    aioLogger.silly(message)
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(0)
+  })
+
+  test('with string substitution and DEBUG=App', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'debug'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    aioLogger.info('message %s %s %d', 'hello', 'world', 123)
+
+    expect(global.console.log).toHaveBeenLastCalledWith(
+      expect.stringContaining('message hello world 123')
+    )
+  })
 })
