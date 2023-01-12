@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const debug = require('debug')
-const { variadicToString } = require('./util')
+const util = require('node:util')
 
 class DebugLogger {
   constructor (config) {
@@ -70,27 +70,27 @@ class DebugLogger {
   }
 
   error (...args) {
-    this.errorLogger(variadicToString(...args))
+    this.errorLogger(util.format(...args))
   }
 
   warn (...args) {
-    this.warnLogger(variadicToString(...args))
+    this.warnLogger(util.format(...args))
   }
 
   info (...args) {
-    this.infoLogger(variadicToString(...args))
+    this.infoLogger(util.format(...args))
   }
 
   verbose (...args) {
-    this.verboseLogger(variadicToString(...args))
+    this.verboseLogger(util.format(...args))
   }
 
   debug (...args) {
-    this.debugLogger(variadicToString(...args))
+    this.debugLogger(util.format(...args))
   }
 
   silly (...args) {
-    this.sillyLogger(variadicToString(...args))
+    this.sillyLogger(util.format(...args))
   }
 }
 

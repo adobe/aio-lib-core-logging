@@ -11,8 +11,6 @@ governing permissions and limitations under the License.
 
 const AioLogger = require('../src/AioLogger')
 const fs = require('fs-extra')
-const { variadicToString } = require('../src/util')
-const util = require('node:util')
 
 global.console = { log: jest.fn() }
 
@@ -21,51 +19,6 @@ beforeEach(() => {
   delete process.env.__OW_ACTION_NAME
   delete process.env.DEBUG
   delete process.env.AIO_LOG_LEVEL
-})
-
-describe('variadicToString', () => {
-  test('empty args', () => {
-    const args = []
-    expect(variadicToString(...args)).not.toBeDefined()
-  })
-
-  test('Error object', () => {
-    const args = [new Error('some error')]
-    expect(variadicToString(...args)).toMatch('Error: some error')
-  })
-
-  test('simple strings', () => {
-    const args = ['abc', 'def', 'ghi']
-    expect(variadicToString(...args)).toEqual(args.join(' '))
-  })
-
-  test('objects', () => {
-    const args = [{ foo: 'bar' }, 'some string', ['a', 'b']]
-    expect(variadicToString(...args)).toEqual(
-      `${util.inspect(args[0])} ${args[1]} ${util.inspect(args[2])}`
-    )
-  })
-
-  test('strings with %s format specifiers', () => {
-    const args = ['My name is %s and I am a %s.', 'Mike', 'mountain climber', 'Fancy seeing you here on top of the spire.']
-    expect(variadicToString(...args)).toEqual('My name is Mike and I am a mountain climber. Fancy seeing you here on top of the spire.')
-  })
-
-  test('strings with %d and %i format specifiers', () => {
-    const args = ['We need %d nuts and %i bolts.', 12, 13, 'If not we can\'t finish the bridge.']
-    expect(variadicToString(...args)).toEqual('We need 12 nuts and 13 bolts. If not we can\'t finish the bridge.')
-  })
-
-  test('strings with %f format specifiers', () => {
-    const args = ['The definition of pi is %f.', 22 / 7, 'I\'m sure of it.']
-    expect(variadicToString(...args)).toEqual(`The definition of pi is ${22 / 7}. I'm sure of it.`)
-  })
-
-  test('strings with %j format specifiers', () => {
-    const json = { beautiful: true }
-    const args = ['Here\'s some json: %j', json, 'Isn\'t it beautiful?']
-    expect(variadicToString(...args)).toEqual('Here\'s some json: {"beautiful":true} Isn\'t it beautiful?')
-  })
 })
 
 describe('config', () => {
@@ -213,10 +166,21 @@ describe('winston logger', () => {
   test('with string substitution and file transport', async () => {
     // change-me: do not hit real file system and do not wait
     const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
-    aioLogger.info('message %s %s %d', 'hello', 'world', 123)
+    const json = { foo: 'bar' }
+    aioLogger.info('message %s %s %d %f %j', 'hello', 'world', 123, 123.456, json)
     aioLogger.close()
 
-    expect(await getLog(LOG_FILE_PATH)).toContain('message hello world 123')
+    expect(await getLog(LOG_FILE_PATH)).toContain('message hello world 123 123.456 {"foo":"bar"}')
+  })
+
+  test('with json object and file transport', async () => {
+    // change-me: do not hit real file system and do not wait
+    const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
+    const json = { foo: 'bar' }
+    aioLogger.info(json)
+    aioLogger.close()
+
+    expect(await getLog(LOG_FILE_PATH)).toContain("{ foo: 'bar' }")
   })
 })
 
@@ -532,10 +496,23 @@ describe('debug logger', () => {
     process.env.AIO_LOG_LEVEL = 'debug'
 
     const aioLogger = AioLogger('App', { provider: 'debug' })
-    aioLogger.info('message %s %s %d', 'hello', 'world', 123)
+    const json = { foo: 'bar' }
+    aioLogger.info('message %s %s %d %f %j', 'hello', 'world', 123, 123.456, json)
 
     expect(global.console.log).toHaveBeenLastCalledWith(
-      expect.stringContaining('message hello world 123')
+      expect.stringContaining('message hello world 123 123.456 {"foo":"bar"}')
+    )
+  })
+
+  test('json objects and DEBUG=App', () => {
+    process.env.DEBUG = 'App'
+    process.env.AIO_LOG_LEVEL = 'debug'
+
+    const aioLogger = AioLogger('App', { provider: 'debug' })
+    aioLogger.info({ foo: 'bar' })
+
+    expect(global.console.log).toHaveBeenLastCalledWith(
+      expect.stringContaining("{ foo: 'bar' }")
     )
   })
 })
