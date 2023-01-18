@@ -77,58 +77,58 @@ class AioLogger {
 
   /** log error message.
   *
-  * @param {...string} messages message to be logged.
+  * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
   */
-  error (...messages) {
-    this.logger.error(...messages)
+  error (...data) {
+    this.logger.error(...data)
   }
 
   /** log warn message.
   *
-  * @param {...string} messages message to be logged.
+  * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
   */
-  warn (...messages) {
-    this.logger.warn(...messages)
+  warn (...data) {
+    this.logger.warn(...data)
   }
 
   /** log info message.
   *
-  * @param {...string} messages message to be logged.
+  * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
   */
-  info (...messages) {
-    this.logger.info(...messages)
+  info (...data) {
+    this.logger.info(...data)
   }
 
   /**
-   * log info message.
-   * @param {...string} messages message to be logged.
+   * log message (equivalent to info)
+   * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
    */
-  log (...messages) {
-    this.logger.info(...messages)
+  log (...data) {
+    this.logger.info(...data)
   }
 
   /** log verbose message.
   *
-  * @param {...string} messages message to be logged.
+   * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
   */
-  verbose (...messages) {
-    this.logger.verbose(...messages)
+  verbose (...data) {
+    this.logger.verbose(...data)
   }
 
   /** log debug message.
   *
-  * @param {...string} messages message to be logged.
+   * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
   */
-  debug (...messages) {
-    this.logger.debug(...messages)
+  debug (...data) {
+    this.logger.debug(...data)
   }
 
   /** log silly message.
   *
-  * @param {...string} messages message to be logged.
+   * @param {...(object|string)} [data] data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()).
   */
-  silly (...messages) {
-    this.logger.silly(...messages)
+  silly (...data) {
+    this.logger.silly(...data)
   }
 }
 

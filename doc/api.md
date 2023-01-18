@@ -7,13 +7,13 @@
         * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
             * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
             * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
-            * [.error(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
-            * [.warn(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
-            * [.info(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
-            * [.log(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
-            * [.verbose(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
-            * [.debug(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
-            * [.silly(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
+            * [.error([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
+            * [.warn([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
+            * [.info([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
+            * [.log([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
+            * [.verbose([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
+            * [.debug([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
+            * [.silly([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
         * [~AioLoggerConfig](#module_@adobe/aio-lib-core-logging--module.exports..AioLoggerConfig) : <code>object</code>
 
 <a name="exp_module_@adobe/aio-lib-core-logging--module.exports"></a>
@@ -39,13 +39,13 @@ Winston is used by default.
 * [~AioLogger](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)
     * [new AioLogger(moduleName, [config])](#new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new)
     * [.close()](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+close)
-    * [.error(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
-    * [.warn(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
-    * [.info(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
-    * [.log(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
-    * [.verbose(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
-    * [.debug(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
-    * [.silly(...messages)](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
+    * [.error([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error)
+    * [.warn([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn)
+    * [.info([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info)
+    * [.log([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log)
+    * [.verbose([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose)
+    * [.debug([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug)
+    * [.silly([...data])](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly)
 
 <a name="new_module_@adobe/aio-lib-core-logging--module.exports..AioLogger_new"></a>
 
@@ -66,80 +66,80 @@ Close the logger. Useful when writing logs to a file or stream.
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+error"></a>
 
-##### aioLogger.error(...messages)
+##### aioLogger.error([...data])
 log error message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+warn"></a>
 
-##### aioLogger.warn(...messages)
+##### aioLogger.warn([...data])
 log warn message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+info"></a>
 
-##### aioLogger.info(...messages)
+##### aioLogger.info([...data])
 log info message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+log"></a>
 
-##### aioLogger.log(...messages)
-log info message.
+##### aioLogger.log([...data])
+log message (equivalent to info)
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+verbose"></a>
 
-##### aioLogger.verbose(...messages)
+##### aioLogger.verbose([...data])
 log verbose message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+debug"></a>
 
-##### aioLogger.debug(...messages)
+##### aioLogger.debug([...data])
 log debug message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLogger+silly"></a>
 
-##### aioLogger.silly(...messages)
+##### aioLogger.silly([...data])
 log silly message.
 
 **Kind**: instance method of [<code>AioLogger</code>](#module_@adobe/aio-lib-core-logging--module.exports..AioLogger)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ...messages | <code>string</code> | message to be logged. |
+| [...data] | <code>object</code> \| <code>string</code> | data to be logged. Prints to the logger with newline. Multiple arguments can be passed, with the first used as the primary message and all additional used as substitution values similar to printf(3) (the arguments are all passed to util.format()). |
 
 <a name="module_@adobe/aio-lib-core-logging--module.exports..AioLoggerConfig"></a>
 

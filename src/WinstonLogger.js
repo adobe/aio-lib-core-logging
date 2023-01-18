@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const winston = require('winston')
+const util = require('node:util')
 const { combine, timestamp, label, splat } = winston.format
 const DEFAULT_DEST = 'console'
 
@@ -57,27 +58,27 @@ class WinstonLogger {
   }
 
   error (...args) {
-    this.logger.error(...args)
+    this.logger.error(util.format(...args))
   }
 
   warn (...args) {
-    this.logger.warn(...args)
+    this.logger.warn(util.format(...args))
   }
 
   info (...args) {
-    this.logger.info(...args)
+    this.logger.info(util.format(...args))
   }
 
   verbose (...args) {
-    this.logger.verbose(...args)
+    this.logger.verbose(util.format(...args))
   }
 
   debug (...args) {
-    this.logger.debug(...args)
+    this.logger.debug(util.format(...args))
   }
 
   silly (...args) {
-    this.logger.silly(...args)
+    this.logger.silly(util.format(...args))
   }
 }
 

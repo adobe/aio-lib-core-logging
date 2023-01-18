@@ -10,12 +10,11 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const debug = require('debug')
+const util = require('node:util')
 
 class DebugLogger {
   constructor (config) {
     this.config = config
-    debug.formatters.s = this.getFormat()
-    debug.formatters.d = this.getFormat()
     debug.log = this.getDestination()
     // make sure to always take into account the latest DEBUG env var
     debug.enable(process.env.DEBUG)
@@ -32,12 +31,6 @@ class DebugLogger {
     this.verboseLogger = debug(config.label).extend('verbose')
     this.debugLogger = debug(config.label).extend('debug')
     this.sillyLogger = debug(config.label).extend('silly')
-  }
-
-  getFormat () {
-    return (message) => {
-      return message
-    }
   }
 
   getDestination () {
@@ -77,27 +70,27 @@ class DebugLogger {
   }
 
   error (...args) {
-    this.errorLogger(...args)
+    this.errorLogger(util.format(...args))
   }
 
   warn (...args) {
-    this.warnLogger(...args)
+    this.warnLogger(util.format(...args))
   }
 
   info (...args) {
-    this.infoLogger(...args)
+    this.infoLogger(util.format(...args))
   }
 
   verbose (...args) {
-    this.verboseLogger(...args)
+    this.verboseLogger(util.format(...args))
   }
 
   debug (...args) {
-    this.debugLogger(...args)
+    this.debugLogger(util.format(...args))
   }
 
   silly (...args) {
-    this.sillyLogger(...args)
+    this.sillyLogger(util.format(...args))
   }
 }
 
