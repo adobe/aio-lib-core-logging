@@ -25,19 +25,20 @@
     "src"
   ],
   "devDependencies": {
-    "@adobe/eslint-config-aio-lib-config": "^2",
+    "@adobe/eslint-config-aio-lib-config": "^2.0.1",
     "@types/jest": "^29.5.1",
     "codecov": "^3.6.1",
-    "eslint": "^8",
-    "eslint-config-standard": "^17",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-jest": "^23",
-    "eslint-plugin-jsdoc": "^37",
-    "eslint-plugin-n": "^15",
+    "eslint": "^8.47.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.0",
+    "eslint-plugin-jest": "^27.2.3",
+    "eslint-plugin-jsdoc": "^42.0.0",
+    "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6",
+    "eslint-plugin-promise": "^6.1.1",
     "fs-extra": "^11.1.1",
     "jest": "^29.3.1",
-    "jsdoc-to-markdown": "^8.0.0"
+    "jsdoc-to-markdown": "^8.0.0",
+    "typescript": "^5.1.6"
   }
 }
