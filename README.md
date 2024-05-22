@@ -43,6 +43,26 @@ The config object can have one or more of the following keys.
 
 The log level can also be overridden using the env variable AIO_LOG_LEVEL
 
+### Enabling Debug Level Logging
+
+Set the 'AIO_LOG_LEVEL' environmental variable to 'debug'
+
+```javascript
+AIO_LOG_LEVEL = debug
+```
+
+Set the 'DEBUG' environment variable:
+To enable debug logging for all modules, set the 'DEBUG' environment variable to 'AIO':
+
+```javascript
+DEBUG = AIO
+```
+
+If you want to enable debug logging for all available logs, set the 'DEBUG' variable to '*':
+
+```javascript
+DEBUG = *
+```
 ### Using custom logger
 
 ```javascript
