@@ -45,23 +45,27 @@ The log level can also be overridden using the env variable AIO_LOG_LEVEL
 
 ### Enabling Debug Level Logging
 
-Set the 'AIO_LOG_LEVEL' environmental variable to 'debug'
+Example of logger configuration:
+
+```javascript
+const logger = require('@adobe/aio-lib-core-logging')('MyModuleName', {provider: 'debug'})
+logger.info('info')
+logger.debug('debug')
+```
+
+To see both logs:
 
 ```javascript
 AIO_LOG_LEVEL = debug
+DEBUG = MyModuleName
 ```
 
-Set the 'DEBUG' environment variable:
-To enable debug logging for all modules, set the 'DEBUG' environment variable to 'AIO':
+It is possible to set the log level from another environment variable if needed:
 
 ```javascript
-DEBUG = AIO
-```
-
-If you want to enable debug logging for all available logs, set the 'DEBUG' variable to '*':
-
-```javascript
-DEBUG = *
+const logger = require('@adobe/aio-lib-core-logging')('MyModuleName', {provider: 'debug', level: process.env.FOOBAR})
+logger.info('info')
+logger.debug('debug')
 ```
 ### Using custom logger
 
