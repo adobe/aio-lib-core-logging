@@ -41,9 +41,22 @@ The config object can have one or more of the following keys.
 - logSourceAction (boolean to control whether to include the action name in the log message)
 - transports (array of custom winston transports)
 
-The log level can also be overridden using the env variable AIO_LOG_LEVEL
+The global log level can also be overridden using the env variable AIO_LOG_LEVEL or the env variable LOG_LEVEL.
 
-### Enabling Debug Level Logging
+### Enabling Debug Level Logging on command line
+Avoid setting the global env variable by passing the log configuration in front of the aio command and stax flexibel.
+
+To see all logs, do 
+```bash
+$ DEBUG=* aio app run
+```
+
+Once you have figured out what logs you are interrested in, use something more specific, like 
+```bash
+$ DEBUG=aio-telemetry:telemetry-lib* aio config
+```
+
+### Enabling Debug Level Logging programatically
 
 Example of logger configuration:
 
