@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "winston": "3.12"
+    "winston": "^3.2.1"
   },
   "files": [
     "src",
