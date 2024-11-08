@@ -12,7 +12,11 @@ governing permissions and limitations under the License.
 const AioLogger = require('../src/AioLogger')
 const fs = require('fs-extra')
 
-global.console = { log: jest.fn() }
+global.console = {
+  log: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn()
+}
 
 beforeEach(() => {
   global.console.log.mockClear()
