@@ -3,9 +3,11 @@
   "version": "3.0.1",
   "description": "Logger framework for the Adobe I/O SDK",
   "main": "src/AioLogger.js",
+  "types": "types/AioLogger.d.ts",
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint && jest --coverage",
+    "types": "npx tsc --allowJs --declaration --emitDeclarationOnly --outDir ./types ./src/AioLogger.js",
     "docs": "jsdoc2md -f 'src/*.js' > doc/api.md"
   },
   "repository": {
@@ -22,7 +24,8 @@
     "winston": "^3.2.1"
   },
   "files": [
-    "src"
+    "src",
+    "types"
   ],
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^2.0.1",
