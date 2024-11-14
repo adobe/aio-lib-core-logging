@@ -1,6 +1,6 @@
 {
   "name": "@adobe/aio-lib-core-logging",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Logger framework for the Adobe I/O SDK",
   "main": "src/AioLogger.js",
   "types": "types/AioLogger.d.ts",
