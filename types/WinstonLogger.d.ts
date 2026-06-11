@@ -4,7 +4,6 @@ declare class WinstonLogger {
     config: any;
     logger: winston.Logger;
     getWinstonFormat(): winston.Logform.Format;
-    getWinstonTransports(transports: any): (winston.transports.ConsoleTransportInstance | winston.transports.FileTransportInstance)[];
     close(): void;
     error(...args: any[]): void;
     warn(...args: any[]): void;

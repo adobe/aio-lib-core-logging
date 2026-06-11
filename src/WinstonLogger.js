@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const winston = require('winston')
 const util = require('node:util')
 const { combine, timestamp, label, splat } = winston.format
-const DEFAULT_DEST = 'console'
+const getWinstonTransports = require('./winstonTransports')
 
 class WinstonLogger {
   constructor (config) {
@@ -25,7 +25,7 @@ class WinstonLogger {
         timestamp(),
         this.getWinstonFormat()
       ),
-      transports: this.getWinstonTransports(config.transports || DEFAULT_DEST),
+      transports: getWinstonTransports(config.transports),
       silent: config.silent
     })
   }
@@ -34,23 +34,6 @@ class WinstonLogger {
     return winston.format.printf(({ level, message, label, timestamp }) => {
       return `${timestamp} [${label}] ${level}: ${message}`
     })
-  }
-
-  getWinstonTransports (transports) {
-    const wTransports = []
-    switch (transports) {
-      case 'console':
-        wTransports.push(new winston.transports.Console())
-        break
-      default:
-        if (typeof (transports) === 'string' && transports.toString().indexOf('.') !== -1) {
-          wTransports.push(new winston.transports.File({ filename: transports }))
-        } else {
-          transports.forEach((t) => wTransports.push(t))
-        }
-        break
-    }
-    return wTransports
   }
 
   close () {

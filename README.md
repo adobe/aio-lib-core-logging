@@ -37,9 +37,10 @@ let aioLogger = require('@adobe/aio-lib-core-logging')('App', config)
 The config object can have one or more of the following keys.
 
 - level (max severity logging level to be logged. can be one of error, warn, info, verbose, debug, silly)
-- provider (logging provider. default is winston.)
+- provider (logging provider. can be `winston` (default), `debug`, or `structured`)
 - logSourceAction (boolean to control whether to include the action name in the log message)
 - transports (array of custom winston transports)
+- fields (key-value pairs merged into every log entry, structured provider only)
 
 The global log level can also be overridden using the env variable AIO_LOG_LEVEL or the env variable LOG_LEVEL.
 
@@ -83,7 +84,7 @@ logger.debug('debug')
 ### Using custom logger
 
 ```javascript
-// Winston Logger
+// Winston Logger (default)
 let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'winston'})
 aioLogger.info('Hello logs')
 ```
@@ -94,6 +95,26 @@ or
 // Debug Logger
 let aioLogger = require('@adobe/aio-lib-core-logging')('App', {provider:'debug'})
 ```
+
+### Structured logging
+
+Use `provider: 'structured'` to output newline-delimited JSON — useful for ingestion by observability platforms (Grafana Loki, Elastic, Honeycomb, etc.) and for OTEL log pipelines where fields become queryable log record attributes.
+
+```javascript
+const logger = require('@adobe/aio-lib-core-logging')('App', {
+  provider: 'structured',
+  fields: { service: 'payment-svc', env: 'prod' }  // merged into every log entry
+})
+
+logger.info('started')
+// → {"timestamp":"...","level":"info","label":"App","message":"started","service":"payment-svc","env":"prod"}
+
+// Pass a plain object as the second argument to add fields per statement
+logger.info('payment processed', { orderId: 'ORD-001', amount: 99.99 })
+// → {"timestamp":"...","level":"info","label":"App","message":"payment processed","service":"payment-svc","env":"prod","orderId":"ORD-001","amount":99.99}
+```
+
+Statement-level fields are merged with logger-level fields; statement fields win on key collision.
 
 ### Send logs to a file
 

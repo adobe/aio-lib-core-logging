@@ -26,9 +26,10 @@ const DEFAULT_LABEL = 'AIO'
  * @property {string} [level] logging level for winston, defaults to info
  * @property {string} [transports] transport config for winston, defaults to undefined
  * @property {boolean} [silent] silent config for winston, defaults to false
- * @property {string} [provider] defaults to winston, can be set to either 'winston' or 'debug'
+ * @property {string} [provider] defaults to winston, can be set to 'winston', 'debug', or 'structured'
  * @property {boolean} [logSourceAction] defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If
  * running in an action set logSourceAction to false if you do not want to log the action name.
+ * @property {object} [fields] key-value pairs merged into every log entry (structured provider only)
  */
 
 /**
@@ -45,7 +46,8 @@ class AioLogger {
     this.setDefaults(moduleName, config)
     if (this.config.provider === 'winston') this.LogProvider = require('./WinstonLogger')
     else if (this.config.provider === 'debug') this.LogProvider = require('./DebugLogger')
-    else throw new Error(`log provider ${this.config.provider} is not supported, use one of [winston, debug]`)
+    else if (this.config.provider === 'structured') this.LogProvider = require('./WinstonStructuredLogger')
+    else throw new Error(`log provider ${this.config.provider} is not supported, use one of [winston, debug, structured]`)
     this.logger = new this.LogProvider(this.config)
   }
 
@@ -59,6 +61,7 @@ class AioLogger {
     this.config.label = this.generateLabel(moduleName, this.config)
     this.config.silent = config.silent || false
     this.config.transports = config.transports
+    this.config.fields = { ...config.fields }
   }
 
   generateLabel (moduleName, config) {

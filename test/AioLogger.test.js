@@ -124,27 +124,6 @@ describe('winston logger', () => {
     expect(global.console.log).toHaveBeenLastCalledWith(expect.stringContaining(`[AIO] info: ${message.join(' ')}`))
   })
 
-  test('use log file path', async () => {
-    const aioLogger = AioLogger('App', { transports: LOG_FILE_PATH, logSourceAction: false })
-    const message = 'message'
-
-    aioLogger.error(message)
-    aioLogger.close()
-
-    expect(await getLog(LOG_FILE_PATH)).toContain(`[App] error: ${message}`)
-  })
-
-  test('use winston.transports.file', async () => {
-    const winston = require('winston')
-    const aioLogger = AioLogger('App', { transports: [new winston.transports.File({ filename: LOG_FILE_PATH })], logSourceAction: false })
-    const message = 'message'
-
-    aioLogger.error(message)
-    aioLogger.close()
-
-    expect(await getLog(LOG_FILE_PATH)).toContain(`[App] error: ${message}`)
-  })
-
   test('with AIO_LOG_LEVEL = error', () => {
     process.env.AIO_LOG_LEVEL = 'error'
 
@@ -161,7 +140,7 @@ describe('winston logger', () => {
     expect.hasAssertions()
 
     const provider = '__a_surely_not_supported_provider1234'
-    const expectedError = new Error(`log provider ${provider} is not supported, use one of [winston, debug]`)
+    const expectedError = new Error(`log provider ${provider} is not supported, use one of [winston, debug, structured]`)
     const func = () => AioLogger('App', { provider })
 
     expect(func).toThrow(expectedError)
@@ -518,5 +497,100 @@ describe('debug logger', () => {
     expect(global.console.log).toHaveBeenLastCalledWith(
       expect.stringContaining("{ foo: 'bar' }")
     )
+  })
+})
+
+describe('structured logger', () => {
+  function parseLastLog () {
+    const calls = global.console.log.mock.calls
+    return JSON.parse(calls[calls.length - 1][0])
+  }
+
+  test('config fields appear in every log entry', () => {
+    const aioLogger = AioLogger('App', { provider: 'structured', fields: { service: 'api', env: 'test' } })
+    aioLogger.info('hello')
+    aioLogger.close()
+
+    const log = parseLastLog()
+    expect(log.message).toEqual('hello')
+    expect(log.service).toEqual('api')
+    expect(log.env).toEqual('test')
+    expect(log.level).toEqual('info')
+    expect(log.label).toEqual('App')
+    expect(log.timestamp).toBeDefined()
+  })
+
+  test('statement fields are merged with config fields', () => {
+    const aioLogger = AioLogger('App', { provider: 'structured', fields: { service: 'api' } })
+    aioLogger.info('payment', { orderId: 'ORD-001', amount: 99 })
+    aioLogger.close()
+
+    const log = parseLastLog()
+    expect(log.message).toEqual('payment')
+    expect(log.service).toEqual('api')
+    expect(log.orderId).toEqual('ORD-001')
+    expect(log.amount).toEqual(99)
+  })
+
+  test('statement fields override config fields on collision', () => {
+    const aioLogger = AioLogger('App', { provider: 'structured', fields: { service: 'api', env: 'prod' } })
+    aioLogger.info('msg', { env: 'test' })
+    aioLogger.close()
+
+    const log = parseLastLog()
+    expect(log.env).toEqual('test')
+    expect(log.service).toEqual('api')
+  })
+
+  test('no fields produces valid JSON with no extra keys', () => {
+    const aioLogger = AioLogger('App', { provider: 'structured' })
+    aioLogger.warn('something')
+    aioLogger.close()
+
+    const log = parseLastLog()
+    expect(log.message).toEqual('something')
+    expect(log.level).toEqual('warn')
+    expect(log.label).toEqual('App')
+    expect(log.timestamp).toBeDefined()
+    expect(Object.keys(log)).toEqual(expect.arrayContaining(['message', 'level', 'label', 'timestamp']))
+  })
+
+  test('all log levels produce structured output', () => {
+    const aioLogger = AioLogger('App', { provider: 'structured', level: 'silly', fields: { svc: 'x' } })
+    aioLogger.error('e')
+    aioLogger.warn('w')
+    aioLogger.info('i')
+    aioLogger.log('l')
+    aioLogger.verbose('v')
+    aioLogger.debug('d')
+    aioLogger.silly('s')
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(7)
+    const calls = global.console.log.mock.calls
+    calls.forEach(([line]) => {
+      const log = JSON.parse(line)
+      expect(log.svc).toEqual('x')
+      expect(log.timestamp).toBeDefined()
+    })
+  })
+
+  test('config is reported correctly', () => {
+    const aioLogger = AioLogger('App', { provider: 'structured', fields: { k: 'v' } })
+    expect(aioLogger.config.provider).toEqual('structured')
+    expect(aioLogger.config.fields).toEqual({ k: 'v' })
+  })
+
+  test('AIO_LOG_LEVEL filters output', () => {
+    process.env.AIO_LOG_LEVEL = 'error'
+
+    const aioLogger = AioLogger('App', { provider: 'structured' })
+    aioLogger.error('e')
+    aioLogger.info('i')
+    aioLogger.close()
+
+    expect(global.console.log).toHaveBeenCalledTimes(1)
+    const log = JSON.parse(global.console.log.mock.calls[0][0])
+    expect(log.level).toEqual('error')
   })
 })

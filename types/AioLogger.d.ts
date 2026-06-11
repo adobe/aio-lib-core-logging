@@ -20,7 +20,7 @@ type AioLoggerConfig = {
      */
     silent?: boolean;
     /**
-     * defaults to winston, can be set to either 'winston' or 'debug'
+     * defaults to winston, can be set to 'winston', 'debug', or 'structured'
      */
     provider?: string;
     /**
@@ -28,6 +28,10 @@ type AioLoggerConfig = {
      * running in an action set logSourceAction to false if you do not want to log the action name.
      */
     logSourceAction?: boolean;
+    /**
+     * key-value pairs merged into every log entry (structured provider only)
+     */
+    fields?: object;
 };
 /**
  * @module @adobe/aio-lib-core-logging
@@ -40,9 +44,10 @@ type AioLoggerConfig = {
  * @property {string} [level] logging level for winston, defaults to info
  * @property {string} [transports] transport config for winston, defaults to undefined
  * @property {boolean} [silent] silent config for winston, defaults to false
- * @property {string} [provider] defaults to winston, can be set to either 'winston' or 'debug'
+ * @property {string} [provider] defaults to winston, can be set to 'winston', 'debug', or 'structured'
  * @property {boolean} [logSourceAction] defaults to true if __OW_ACTION_NAME is set otherwise defaults to false. If
  * running in an action set logSourceAction to false if you do not want to log the action name.
+ * @property {object} [fields] key-value pairs merged into every log entry (structured provider only)
  */
 /**
 * This class provides a logging framework with pluggable logging provider.
@@ -55,8 +60,8 @@ declare class AioLogger {
     * @param {AioLoggerConfig} [config={}] for the log framework.
     */
     constructor(moduleName: string, config?: AioLoggerConfig);
-    LogProvider: typeof import("./WinstonLogger") | typeof import("./DebugLogger");
-    logger: import("./WinstonLogger") | import("./DebugLogger");
+    LogProvider: typeof import("./WinstonLogger") | typeof import("./DebugLogger") | typeof import("./WinstonStructuredLogger");
+    logger: import("./WinstonLogger") | import("./DebugLogger") | import("./WinstonStructuredLogger");
     setDefaults(moduleName: any, config: any): void;
     config: {};
     generateLabel(moduleName: any, config: any): string;
